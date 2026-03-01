@@ -1,0 +1,113 @@
+body {
+  font-family: sans-serif;
+  background: #f4f7f6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.alerta {
+  color: red;
+  font-weight: bold;
+}
+
+button {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+input {
+  padding: 8px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilo para o Comprovante de Venda */
+#comprovante-print {
+  display: none;
+  padding: 20px;
+  border: 1px solid #000;
+  width: 300px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+/* Atualize seu bloco de CSS de impressão */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #comprovante-print,
+  #comprovante-print * {
+    visibility: visible;
+  }
+
+  #comprovante-print {
+    display: none;
+    padding: 30px;
+    background: white;
+    width: 170mm;
+    /* Tamanho fixo para não cortar no A4 */
+    margin: 0 auto;
+    color: #000;
+  }
+
+  .total-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 10px 0;
+    border-top: 1px dashed #000;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  /* Força o navegador a imprimir cores e fundos se houver */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Padroniza todos os campos de entrada e seleção dentro dos cards */
+.card input,
+.card select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  /* Essencial para manter o tamanho igual */
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 40px;
+  /* Define uma altura fixa para ambos */
+}
+
+/* Garante que o select não tenha um comportamento de altura diferente */
+.card select {
+  appearance: none;
+  /* Remove estilos padrão do navegador se necessário */
+  background-color: white;
+}

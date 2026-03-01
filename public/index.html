@@ -1,0 +1,192 @@
+<head>
+    <meta charset="UTF-8">
+    <title>ERP - InovaClean</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Painel de Controle - Bacabal/MA</h2>
+
+        <div id="login-area">
+            <h3>Login Administrativo</h3>
+            <input type="email" id="email" placeholder="E-mail">
+            <input type="password" id="senha" placeholder="Senha">
+            <button onclick="fazerLogin()">Entrar no Sistema</button>
+        </div>
+
+        <div id="dashboard-area" style="display:none;">
+            <div class="card" style="margin-top: 20px; border-top: 3px solid #007bff;">
+                <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+                    <h3>👤 Cadastrar Novo Cliente</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="cli-nome" placeholder="Nome Fantasia (Ex: Hospital Regional)">
+                        <input type="text" id="cli-cnpj" placeholder="CNPJ">
+                        <select id="cli-tipo">
+                            <option value="Hospital">Hospital</option>
+                            <option value="Escola">Escola</option>
+                            <option value="Empresa">Empresa</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                        <input type="text" id="cli-cidade" value="Bacabal" placeholder="Cidade">
+                        <input type="text" id="cli-estado" value="MA" maxlength="2" placeholder="UF">
+                    </div>
+                    <button onclick="cadastrarCliente()" style="width: 100%; margin-top: 10px; background: #28a745;">
+                        Salvar Cliente
+                    </button>
+                </div>
+
+                <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
+                    <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="prod-nome" placeholder="Nome do Produto (Ex: Desinfetante Pinheiro 5L)">
+                        <select id="prod-categoria">
+                            <option value="1">Limpeza Geral</option>
+                            <option value="2">Higiene Hospitalar</option>
+                            <option value="3">Uso Escolar</option>
+                        </select>
+                        <input type="number" id="prod-custo" step="0.01" placeholder="Preço de Custo (R$)">
+                        <input type="number" id="prod-venda" step="0.01" placeholder="Preço de Venda (R$)">
+                        <input type="number" id="prod-estoque-inicial" placeholder="Estoque Inicial">
+                        <input type="number" id="prod-estoque-minimo" value="10" placeholder="Estoque Mínimo (Alerta)">
+                        <input type="text" id="prod-unidade" value="Unidade" placeholder="Unidade (Ex: Galão, Caixa)">
+                    </div>
+                    <button onclick="cadastrarProduto()" style="width: 100%; margin-top: 10px; background: #6f42c1;">
+                        Salvar Novo Produto no Catálogo
+                    </button>
+                </div>
+
+                <div class="card" style="background: #d4edda; border-left: 5px solid #28a745;">
+                    <h3>💰 Lucro Líquido (Mês Atual)</h3>
+                    <p id="lucro-mensal" style="font-size: 28px; font-weight: bold; color: #155724;">R$ 0,00</p>
+                    <small>Baseado no Preço de Custo cadastrado</small>
+                </div>
+
+                <div class="card" style="margin-top: 20px; border-top: 3px solid #007bff;">
+                    <h3>📋 Lista de Produtos / Editar</h3>
+                    <table style="width: 100%; border-collapse: collapse;" id="tabela-produtos-edit">
+                        <thead>
+                            <tr style="background: #f4f4f4; text-align: left;">
+                                <th style="padding: 10px;">ID</th>
+                                <th>Nome</th>
+                                <th>Preço Venda</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-produtos"></tbody>
+                    </table>
+                </div>
+
+                <div id="modal-edicao" class="card"
+                    style="display:none; border: 2px solid #007bff; background: #eef6ff;">
+                    <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
+                    <input type="hidden" id="edit-id">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="text" id="edit-nome" placeholder="Nome">
+                        <input type="number" id="edit-venda" step="0.01" placeholder="Preço Venda">
+                        <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
+                        <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
+                    </div>
+                    <button onclick="salvarEdicao()" style="background: #007bff; width: 48%;">Salvar Alterações</button>
+                    <button onclick="document.getElementById('modal-edicao').style.display='none'"
+                        style="background: #6c757d; width: 48%;">Cancelar</button>
+                </div>
+                <h3>🛒 Registrar Nova Venda</h3>
+
+                <label>Selecione o Cliente:</label>
+                <select id="select-clientes"></select>
+
+                <hr>
+
+                <label>Produto:</label>
+                <select id="select-produtos"></select>
+
+                <label>Quantidade:</label>
+                <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
+
+                <button onclick="adicionarAoCarrinho()" style="background:#17a2b8">Adicionar Item</button>
+
+                <h4>Itens no Carrinho:</h4>
+                <ul id="carrinho-lista"></ul>
+
+                <button onclick="finalizarVenda()" id="btn-finalizar"
+                    style="width:100%; margin-top:10px; display:none;">
+                    Confirmar e Gerar Venda
+                </button>
+            </div>
+
+            <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
+                <div class="card" style="background: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px;">
+                    <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 150px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data Início:</label>
+                            <input type="date" id="filtro-inicio" style="margin-bottom: 0;">
+                        </div>
+
+                        <div style="flex: 1; min-width: 150px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data Fim:</label>
+                            <input type="date" id="filtro-fim" style="margin-bottom: 0;">
+                        </div>
+
+                        <div style="display: flex; gap: 10px;">
+                            <button type="button" onclick="aplicarFiltros()"
+                                style="background: #17a2b8; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                Filtrar
+                            </button>
+                            <button type="button" onclick="limparFiltros()"
+                                style="background: #6c757d; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                Limpar
+                            </button>
+                            <button type="button" onclick="exportarExcel()"
+                                style="background: #28a745; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                Exportar Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <h3>📜 Histórico de Vendas Realizadas</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th style="padding: 10px; text-align: left;">ID</th>
+                            <th style="text-align: left;">Data</th>
+                            <th style="text-align: left;">Cliente</th>
+                            <th style="text-align: left;">Total</th>
+                            <th style="text-align: center;">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-historico-vendas">
+                    </tbody>
+                </table>
+            </div>
+            <div id="comprovante-print">
+                <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px;">
+                    <h2 style="margin: 0;">InovaClean</h2>
+                    <p style="margin: 5px 0;">Distribuidora de Produtos de Limpeza</p>
+                    <p style="margin: 0;">Bacabal - MA</p>
+                </div>
+                <div id="comprovante-conteudo" style="padding-top: 10px;">
+                </div>
+                <div style="text-align: center; border-top: 1px dashed #000; margin-top: 20px; padding-top: 10px;">
+                    <p>Obrigado pela preferência!</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Vendas de Hoje</h3>
+                <p id="vendas-hoje">R$ 0,00</p>
+            </div>
+            <div class="card">
+                <h3>Faturamento Mensal</h3>
+                <p id="faturamento-mensal">R$ 0,00</p>
+            </div>
+            <div class="card">
+                <h3>Alerta de Estoque Crítico</h3>
+                <ul id="lista-estoque"></ul>
+            </div>
+            <button onclick="carregarDashboard()" style="background:#007bff">Atualizar Dados</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+</body>
