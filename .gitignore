@@ -43,3 +43,8 @@ Thumbs.db
 # Dependências do sistema
 .yarn
 .pnp
+
+# Github tools
+GITHUB_SETUP.md
+QUICK_GITHUB.md
+prepare-github.bat
