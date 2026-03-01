@@ -39,4 +39,14 @@ function verificarJWT(req, res, next) {
   }
 }
 
-module.exports = { verificarJWT, SECRET_KEY };
+function verificarAdmin(req, res, next) {
+  if (req.usuarioCargo !== 'admin') {
+    return res.status(403).json({
+      success: false,
+      message: "Acesso negado. Apenas administradores podem realizar esta ação."
+    });
+  }
+  next();
+}
+
+module.exports = { verificarJWT, verificarAdmin, SECRET_KEY };

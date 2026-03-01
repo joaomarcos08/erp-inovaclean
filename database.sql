@@ -51,19 +51,69 @@ CREATE TABLE movimentacoes_estoque (
 INSERT INTO categorias (nome, descricao) 
 VALUES ('Hospitalar', 'Produtos de desinfecção para clínicas e hospitais');
 
--- Cabeçalho da Venda
+-- 6.Cabeçalho da Venda
 CREATE TABLE vendas (
     id SERIAL PRIMARY KEY,
     cliente_id INTEGER REFERENCES clientes(id),
+    vendedor_id INTEGER REFERENCES usuarios(id),
+    forma_pagamento VARCHAR(50),
+    status VARCHAR(50) DEFAULT 'Concluída',
     data_venda TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     valor_total DECIMAL(10, 2) DEFAULT 0.00
 );
 
--- Itens da Venda (Produtos vinculados)
+-- 7.Itens da Venda (Produtos vinculados)
 CREATE TABLE itens_venda (
     id SERIAL PRIMARY KEY,
     venda_id INTEGER REFERENCES vendas(id) ON DELETE CASCADE,
     produto_id INTEGER REFERENCES produtos(id),
     quantidade INTEGER NOT NULL,
     preco_unitario DECIMAL(10, 2) NOT NULL
+);
+
+-- 8. Gestão Financeira (Despesas e Receitas)
+CREATE TABLE financeiro (
+    id SERIAL PRIMARY KEY,
+    descricao VARCHAR(255) NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    tipo VARCHAR(50) NOT NULL, -- 'Receita' ou 'Despesa'
+    conta_origem VARCHAR(100), -- Ex: 'Venda #10', 'Pedido #5'
+    data_vencimento DATE NOT NULL,
+    data_pagamento DATE,
+    status VARCHAR(50) DEFAULT 'Pendente', -- 'Pendente', 'Pago', 'Atrasado', 'Cancelado'
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 9. Orçamentos (Pré-Vendas)
+CREATE TABLE orcamentos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER REFERENCES clientes(id),
+    data_orcamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    valor_total DECIMAL(10, 2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'Pendente' -- 'Pendente', 'Convertido', 'Cancelado'
+);
+
+CREATE TABLE itens_orcamento (
+    id SERIAL PRIMARY KEY,
+    orcamento_id INTEGER REFERENCES orcamentos(id) ON DELETE CASCADE,
+    produto_id INTEGER REFERENCES produtos(id),
+    quantidade INTEGER NOT NULL,
+    preco_unitario DECIMAL(10, 2) NOT NULL
+);
+
+-- 10. Pedidos de Compra (Entrada de Estoque via Fornecida)
+CREATE TABLE pedidos_compra (
+    id SERIAL PRIMARY KEY,
+    fornecedor_id INTEGER REFERENCES fornecedores(id),
+    data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    valor_total DECIMAL(10, 2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'Recebido' -- 'Pendente', 'Recebido'
+);
+
+CREATE TABLE itens_pedido (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER REFERENCES pedidos_compra(id) ON DELETE CASCADE,
+    produto_id INTEGER REFERENCES produtos(id),
+    quantidade INTEGER NOT NULL,
+    preco_custo DECIMAL(10, 2) NOT NULL
 );

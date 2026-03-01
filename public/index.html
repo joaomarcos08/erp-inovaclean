@@ -1,192 +1,718 @@
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ERP - InovaClean</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <div class="container">
-        <h2>Painel de Controle - Bacabal/MA</h2>
-
-        <div id="login-area">
-            <h3>Login Administrativo</h3>
-            <input type="email" id="email" placeholder="E-mail">
-            <input type="password" id="senha" placeholder="Senha">
-            <button onclick="fazerLogin()">Entrar no Sistema</button>
+    <div id="login-area">
+        <div class="login-left">
+            <i class="fas fa-boxes login-icon"></i>
+            <h1>InovaClean ERP</h1>
+            <p>Gestão Inteligente para sua Distribuidora de Produtos de Limpeza.</p>
         </div>
-
-        <div id="dashboard-area" style="display:none;">
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #007bff;">
-                <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
-                    <h3>👤 Cadastrar Novo Cliente</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="text" id="cli-nome" placeholder="Nome Fantasia (Ex: Hospital Regional)">
-                        <input type="text" id="cli-cnpj" placeholder="CNPJ">
-                        <select id="cli-tipo">
-                            <option value="Hospital">Hospital</option>
-                            <option value="Escola">Escola</option>
-                            <option value="Empresa">Empresa</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-                        <input type="text" id="cli-cidade" value="Bacabal" placeholder="Cidade">
-                        <input type="text" id="cli-estado" value="MA" maxlength="2" placeholder="UF">
-                    </div>
-                    <button onclick="cadastrarCliente()" style="width: 100%; margin-top: 10px; background: #28a745;">
-                        Salvar Cliente
-                    </button>
-                </div>
-
-                <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
-                    <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="text" id="prod-nome" placeholder="Nome do Produto (Ex: Desinfetante Pinheiro 5L)">
-                        <select id="prod-categoria">
-                            <option value="1">Limpeza Geral</option>
-                            <option value="2">Higiene Hospitalar</option>
-                            <option value="3">Uso Escolar</option>
-                        </select>
-                        <input type="number" id="prod-custo" step="0.01" placeholder="Preço de Custo (R$)">
-                        <input type="number" id="prod-venda" step="0.01" placeholder="Preço de Venda (R$)">
-                        <input type="number" id="prod-estoque-inicial" placeholder="Estoque Inicial">
-                        <input type="number" id="prod-estoque-minimo" value="10" placeholder="Estoque Mínimo (Alerta)">
-                        <input type="text" id="prod-unidade" value="Unidade" placeholder="Unidade (Ex: Galão, Caixa)">
-                    </div>
-                    <button onclick="cadastrarProduto()" style="width: 100%; margin-top: 10px; background: #6f42c1;">
-                        Salvar Novo Produto no Catálogo
-                    </button>
-                </div>
-
-                <div class="card" style="background: #d4edda; border-left: 5px solid #28a745;">
-                    <h3>💰 Lucro Líquido (Mês Atual)</h3>
-                    <p id="lucro-mensal" style="font-size: 28px; font-weight: bold; color: #155724;">R$ 0,00</p>
-                    <small>Baseado no Preço de Custo cadastrado</small>
-                </div>
-
-                <div class="card" style="margin-top: 20px; border-top: 3px solid #007bff;">
-                    <h3>📋 Lista de Produtos / Editar</h3>
-                    <table style="width: 100%; border-collapse: collapse;" id="tabela-produtos-edit">
-                        <thead>
-                            <tr style="background: #f4f4f4; text-align: left;">
-                                <th style="padding: 10px;">ID</th>
-                                <th>Nome</th>
-                                <th>Preço Venda</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="corpo-tabela-produtos"></tbody>
-                    </table>
-                </div>
-
-                <div id="modal-edicao" class="card"
-                    style="display:none; border: 2px solid #007bff; background: #eef6ff;">
-                    <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
-                    <input type="hidden" id="edit-id">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <input type="text" id="edit-nome" placeholder="Nome">
-                        <input type="number" id="edit-venda" step="0.01" placeholder="Preço Venda">
-                        <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
-                        <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
-                    </div>
-                    <button onclick="salvarEdicao()" style="background: #007bff; width: 48%;">Salvar Alterações</button>
-                    <button onclick="document.getElementById('modal-edicao').style.display='none'"
-                        style="background: #6c757d; width: 48%;">Cancelar</button>
-                </div>
-                <h3>🛒 Registrar Nova Venda</h3>
-
-                <label>Selecione o Cliente:</label>
-                <select id="select-clientes"></select>
-
-                <hr>
-
-                <label>Produto:</label>
-                <select id="select-produtos"></select>
-
-                <label>Quantidade:</label>
-                <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
-
-                <button onclick="adicionarAoCarrinho()" style="background:#17a2b8">Adicionar Item</button>
-
-                <h4>Itens no Carrinho:</h4>
-                <ul id="carrinho-lista"></ul>
-
-                <button onclick="finalizarVenda()" id="btn-finalizar"
-                    style="width:100%; margin-top:10px; display:none;">
-                    Confirmar e Gerar Venda
-                </button>
-            </div>
-
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
-                <div class="card" style="background: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px;">
-                    <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
-                        <div style="flex: 1; min-width: 150px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data Início:</label>
-                            <input type="date" id="filtro-inicio" style="margin-bottom: 0;">
-                        </div>
-
-                        <div style="flex: 1; min-width: 150px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data Fim:</label>
-                            <input type="date" id="filtro-fim" style="margin-bottom: 0;">
-                        </div>
-
-                        <div style="display: flex; gap: 10px;">
-                            <button type="button" onclick="aplicarFiltros()"
-                                style="background: #17a2b8; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                                Filtrar
-                            </button>
-                            <button type="button" onclick="limparFiltros()"
-                                style="background: #6c757d; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                                Limpar
-                            </button>
-                            <button type="button" onclick="exportarExcel()"
-                                style="background: #28a745; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                                Exportar Excel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <h3>📜 Histórico de Vendas Realizadas</h3>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                            <th style="padding: 10px; text-align: left;">ID</th>
-                            <th style="text-align: left;">Data</th>
-                            <th style="text-align: left;">Cliente</th>
-                            <th style="text-align: left;">Total</th>
-                            <th style="text-align: center;">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-historico-vendas">
-                    </tbody>
-                </table>
-            </div>
-            <div id="comprovante-print">
-                <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px;">
-                    <h2 style="margin: 0;">InovaClean</h2>
-                    <p style="margin: 5px 0;">Distribuidora de Produtos de Limpeza</p>
-                    <p style="margin: 0;">Bacabal - MA</p>
-                </div>
-                <div id="comprovante-conteudo" style="padding-top: 10px;">
-                </div>
-                <div style="text-align: center; border-top: 1px dashed #000; margin-top: 20px; padding-top: 10px;">
-                    <p>Obrigado pela preferência!</p>
+        <div class="login-right">
+            <div class="login-form-container">
+                <h3>Acesse sua Conta</h3>
+                <input type="email" id="email" placeholder="E-mail">
+                <input type="password" id="senha" placeholder="Senha">
+                <button onclick="fazerLogin()">Entrar no Sistema</button>
+                <div class="login-footer">
+                    &copy; 2026 InovaClean ERP. Todos os direitos reservados.
                 </div>
             </div>
-            <div class="card">
-                <h3>Vendas de Hoje</h3>
-                <p id="vendas-hoje">R$ 0,00</p>
-            </div>
-            <div class="card">
-                <h3>Faturamento Mensal</h3>
-                <p id="faturamento-mensal">R$ 0,00</p>
-            </div>
-            <div class="card">
-                <h3>Alerta de Estoque Crítico</h3>
-                <ul id="lista-estoque"></ul>
-            </div>
-            <button onclick="carregarDashboard()" style="background:#007bff">Atualizar Dados</button>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="/js/app.js"></script>
+    <div id="dashboard-area" style="display:none;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Painel de Controle ERP - Bacabal/MA</h2>
+                <button id="btn-logout" onclick="logout()"
+                    style="background: #dc3545; padding: 8px 15px; font-size: 14px;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+
+            <nav class="tabs-container">
+                <button class="tab-button" onclick="alternarAba('dashboard')" id="btn-tab-dashboard">Dashboard</button>
+                <button class="tab-button" onclick="alternarAba('clientes')" id="btn-tab-clientes">Clientes</button>
+                <button class="tab-button" onclick="alternarAba('fornecedores')"
+                    id="btn-tab-fornecedores">Fornecedores</button>
+                <button class="tab-button" onclick="alternarAba('produtos')" id="btn-tab-produtos">Produtos</button>
+                <button class="tab-button" onclick="alternarAba('vendas')" id="btn-tab-vendas">Vendas</button>
+                <button class="tab-button" onclick="alternarAba('orcamentos')"
+                    id="btn-tab-orcamentos">Orçamentos</button>
+                <button class="tab-button" onclick="alternarAba('financeiro')"
+                    id="btn-tab-financeiro">Financeiro</button>
+                <button class="tab-button" onclick="alternarAba('historico')" id="btn-tab-historico">Histórico</button>
+                <button class="tab-button" onclick="alternarAba('equipe')" id="btn-tab-equipe"
+                    style="display: none;">Equipe
+                    (Admin)</button>
+            </nav>
+
+            <div id="aba-dashboard" class="tab-content">
+                <div class="dashboard-metrics-grid">
+                    <div class="metric-card sales">
+                        <div class="metric-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>Vendas de Hoje</h3>
+                            <p id="vendas-hoje">R$ 0,00</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card revenue">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>Faturamento Mensal</h3>
+                            <p id="faturamento-mensal">R$ 0,00</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card profit">
+                        <div class="metric-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>Lucro Líquido</h3>
+                            <p id="lucro-mensal">R$ 0,00</p>
+                            <small>Baseado no Preço de Custo</small>
+                        </div>
+                    </div>
+
+                    <div class="metric-card balance" style="border-left-color: #fd7e14;">
+                        <div class="metric-icon" style="color: #fd7e14; background: rgba(253, 126, 20, 0.1);">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>Saldo Líquido (Hoje)</h3>
+                            <p id="saldo-dia">R$ 0,00</p>
+                            <small>Vendas hoje - Despesas pagas</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos do Dashboard -->
+                <div
+                    style="display: none !important; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; align-items: center; gap: 15px;">
+                    <h4 style="margin: 0; padding-right: 15px; border-right: 2px solid #ccc;">Filtro dos Gráficos:</h4>
+                    <label style="margin: 0; font-weight: bold;">Início:</label>
+                    <input type="date" id="filtro-grafico-inicio" style="margin: 0; width: auto;">
+
+                    <label style="margin: 0; font-weight: bold;">Fim:</label>
+                    <input type="date" id="filtro-grafico-fim" style="margin: 0; width: auto;">
+
+                    <button onclick="aplicarFiltrosGraficos()"
+                        style="margin: 0; background: #007bff; white-space: nowrap;">
+                        Aplicar Filtros nos Gráficos
+                    </button>
+                </div>
+
+                <div
+                    style="display: none !important; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; align-items: stretch;">
+                    <div class="card" style="margin: 0; display: flex; flex-direction: column;">
+                        <h3>📈 Tendência de Vendas (Últimos 7 Dias)</h3>
+                        <div style="position: relative; flex-grow: 1; height: 300px; width: 100%;">
+                            <canvas id="chart-faturamento"></canvas>
+                        </div>
+                    </div>
+                    <div class="card" style="margin: 0; display: flex; flex-direction: column;">
+                        <h3>🥧 Vendas por Categoria (Mês Atual)</h3>
+                        <div
+                            style="position: relative; flex-grow: 1; height: 300px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                            <canvas id="chart-categorias" style="max-height: 100%; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                    <div class="card" style="border-top: 3px solid #fd7e14;">
+                        <h3>💸 Registrar Nova Despesa</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <input type="text" id="desp-descricao" placeholder="Descrição (ex: Conta de Luz, Aluguel)">
+                            <input type="number" step="0.01" id="desp-valor" placeholder="Valor (R$)">
+                            <input type="date" id="desp-vencimento">
+                            <select id="desp-status">
+                                <option value="Pendente">Pendente (A Pagar)</option>
+                                <option value="Pago">Pago</option>
+                            </select>
+                            <button onclick="registrarDespesa()" style="background: #fd7e14;">Salvar Despesa</button>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-top: 3px solid #dc3545;">
+                        <h3>🗓️ Compromissos Financeiros (Vencem Hoje)</h3>
+                        <ul id="lista-compromissos" style="padding-left: 20px; margin-top: 10px; color: #dc3545;"></ul>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                    <div class="card" style="border-top: 3px solid #ffc107; margin: 0;">
+                        <h3>⚠️ Alerta de Estoque Crítico</h3>
+                        <ul id="lista-estoque" style="padding-left: 20px; margin-top: 10px; color: #dc3545;"></ul>
+                    </div>
+
+                    <div class="card" style="border-top: 3px solid #17a2b8; margin: 0;">
+                        <h3>🛒 Sugestão de Compra (Prevenção)</h3>
+                        <ul id="lista-sugestao-compra" style="padding-left: 20px; margin-top: 10px; color: #17a2b8;">
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" style="border-top: 3px solid #6c757d; margin-bottom: 25px;">
+                    <h3>💤 Clientes Inativos (> 30 dias sem compras em Bacabal)</h3>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                            <thead>
+                                <tr style="background: #f4f4f4;">
+                                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">ID</th>
+                                    <th style="border-bottom: 2px solid #ddd;">Nome Fantasia</th>
+                                    <th style="border-bottom: 2px solid #ddd;">Última Compra</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela-inativos"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- Fim Aba Dashboard -->
+
+        <div id="aba-clientes" class="tab-content">
+            <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+                <h3>👤 Cadastrar Novo Cliente</h3>
+                <div class="responsive-grid">
+                    <input type="text" id="cli-nome" placeholder="Nome Fantasia (Ex: Hospital Regional)">
+                    <input type="text" id="cli-cnpj" placeholder="CNPJ">
+                    <select id="cli-tipo">
+                        <option value="Hospital">Hospital</option>
+                        <option value="Escola">Escola</option>
+                        <option value="Empresa">Empresa</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                    <input type="text" id="cli-cidade" value="Bacabal" placeholder="Cidade">
+                    <input type="text" id="cli-estado" value="MA" maxlength="2" placeholder="UF">
+                </div>
+                <button onclick="cadastrarCliente()"
+                    style="display: block; width: fit-content; margin: 10px auto 0; background: #28a745;">
+                    Salvar Cliente
+                </button>
+            </div>
+
+            <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
+                <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
+                <div class="responsive-grid">
+                    <input type="text" id="prod-nome" placeholder="Nome do Produto (Ex: Desinfetante Pinheiro 5L)">
+                    <select id="prod-categoria">
+                        <option value="1">Limpeza Geral</option>
+                        <option value="2">Higiene Hospitalar</option>
+                        <option value="3">Uso Escolar</option>
+                    </select>
+                    <input type="number" id="prod-custo" step="0.01" placeholder="Preço de Custo (R$)">
+                    <input type="number" id="prod-venda" step="0.01" placeholder="Preço de Venda (R$)">
+                    <input type="number" id="prod-estoque-inicial" placeholder="Estoque Inicial">
+                    <input type="number" id="prod-estoque-minimo" value="10" placeholder="Estoque Mínimo (Alerta)">
+                    <input type="text" id="prod-unidade" value="Unidade" placeholder="Unidade (Ex: Galão, Caixa)">
+                </div>
+                <button onclick="cadastrarProduto()"
+                    style="display: block; width: fit-content; margin: 10px auto 0; background: #6f42c1;">
+                    Salvar Novo Produto no Catálogo
+                </button>
+            </div>
+
+            <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+                <h3>👥 Lista de Clientes / Editar</h3>
+                <div class="table-responsive">
+                    <table style="width: 100%; border-collapse: collapse;" id="tabela-clientes-edit">
+                        <thead>
+                            <tr style="background: #f4f4f4; text-align: left;">
+                                <th style="padding: 10px;">ID</th>
+                                <th>Nome Fantasia</th>
+                                <th>CNPJ</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-clientes"></tbody>
+                    </table>
+                </div>
+
+                <div id="modal-edicao-cliente" class="modal-overlay">
+                    <div class="modal-content" style="border-top: 5px solid #28a745;">
+                        <h3>✏️ Editando Cliente: <span id="edit-cli-nome-titulo"></span></h3>
+                        <input type="hidden" id="edit-cli-id">
+                        <div class="responsive-grid">
+                            <input type="text" id="edit-cli-nome" placeholder="Nome Fantasia">
+                            <input type="text" id="edit-cli-cnpj" placeholder="CNPJ">
+                            <select id="edit-cli-tipo">
+                                <option value="Hospital">Hospital</option>
+                                <option value="Escola">Escola</option>
+                                <option value="Empresa">Empresa</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                            <input type="text" id="edit-cli-cidade" placeholder="Cidade">
+                            <input type="text" id="edit-cli-estado" placeholder="UF" maxlength="2">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                            <button onclick="salvarEdicaoCliente()" style="background: #28a745; width: 48%;">Salvar
+                                Alterações</button>
+                            <button onclick="document.getElementById('modal-edicao-cliente').style.display='none'"
+                                style="background: #6c757d; width: 48%;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Fim aba clientes -->
+
+            <div id="aba-produtos" class="tab-content">
+                <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
+                    <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
+                    <div class="table-responsive">
+                        <table style="width: 100%; border-collapse: collapse;" id="tabela-produtos-edit">
+                            <thead>
+                                <tr style="background: #f4f4f4; text-align: left;">
+                                    <th style="padding: 10px;">ID</th>
+                                    <th>Nome</th>
+                                    <th>Preço Venda</th>
+                                    <th>Estoque Atual</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela-produtos"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="modal-edicao" class="modal-overlay">
+                        <div class="modal-content" style="border-top: 5px solid #007bff;">
+                            <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
+                            <input type="hidden" id="edit-id">
+                            <div class="responsive-grid">
+                                <input type="text" id="edit-nome" placeholder="Nome">
+                                <input type="number" id="edit-venda" step="0.01" placeholder="Preço Venda">
+                                <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
+                                <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                <button onclick="salvarEdicao()" style="background: #007bff; width: 48%;">Salvar
+                                    Alterações</button>
+                                <button onclick="document.getElementById('modal-edicao').style.display='none'"
+                                    style="background: #6c757d; width: 48%;">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- Fim Aba Produtos -->
+
+                <div id="aba-vendas" class="tab-content">
+                    <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
+                        <h3>🛒 Registrar Nova Venda</h3>
+
+                        <label>Selecione o Cliente:</label>
+                        <select id="select-clientes"></select>
+
+                        <hr>
+
+                        <label>Produto:</label>
+                        <select id="select-produtos"></select>
+
+                        <label>Quantidade:</label>
+                        <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
+
+                        <button onclick="adicionarAoCarrinho()" style="background:#17a2b8">Adicionar Item</button>
+
+                        <h4>Itens no Carrinho:</h4>
+                        <ul id="carrinho-lista"></ul>
+
+                        <div style="display: flex; gap: 10px; margin-top:10px;">
+                            <select id="forma-pagamento" style="display:none; flex:1; height: 40px;">
+                                <option value="Dinheiro">Dinheiro</option>
+                                <option value="PIX">PIX</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="Cartão de Débito">Cartão de Débito</option>
+                                <option value="Boleto">Boleto (A Prazo)</option>
+                            </select>
+                            <button onclick="finalizarVenda()" id="btn-finalizar"
+                                style="flex:1; display:none; background:#28a745; height: 40px; margin: 0;">
+                                Confirmar Venda
+                            </button>
+                            <button onclick="salvarOrcamento()" id="btn-orcamento"
+                                style="flex:1; display:none; background:#ffc107; color:#000; height: 40px; margin: 0;">
+                                Salvar Orçamento
+                            </button>
+                        </div>
+                    </div>
+                </div> <!-- Fim Aba Vendas -->
+
+                <div id="aba-orcamentos" class="tab-content">
+                    <div class="card" style="margin-top: 20px; border-top: 3px solid #ffc107;">
+                        <h3>📑 Histórico de Orçamentos</h3>
+
+                        <div class="table-responsive">
+                            <table style="width: 100%; border-collapse: collapse; margin-top:15px;"
+                                id="tabela-orcamentos">
+                                <thead>
+                                    <tr style="background: #f4f4f4; text-align: left;">
+                                        <th style="padding: 10px;">ID</th>
+                                        <th>Data</th>
+                                        <th>Cliente</th>
+                                        <th>Valor Total</th>
+                                        <th>Status</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="corpo-tabela-orcamentos"></tbody>
+                            </table>
+                        </div>
+                    </div> <!-- Fim Aba Orcamentos -->
+
+                    <div id="aba-historico" class="tab-content">
+                        <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
+                            <div class="card"
+                                style="background: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px;">
+                                <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
+                                    <div style="flex: 1; min-width: 150px;">
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data
+                                            Início:</label>
+                                        <input type="date" id="filtro-inicio" style="margin-bottom: 0;">
+                                    </div>
+
+                                    <div style="flex: 1; min-width: 150px;">
+                                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data
+                                            Fim:</label>
+                                        <input type="date" id="filtro-fim" style="margin-bottom: 0;">
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px;">
+                                        <button type="button" onclick="aplicarFiltros()"
+                                            style="background: #17a2b8; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                            Filtrar
+                                        </button>
+                                        <button type="button" onclick="limparFiltros()"
+                                            style="background: #6c757d; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                            Limpar
+                                        </button>
+                                        <button type="button" onclick="exportarExcel()"
+                                            style="background: #28a745; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                            Exportar Excel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>📜 Histórico de Vendas Realizadas</h3>
+                            <div class="table-responsive">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                                            <th style="padding: 10px; text-align: left;">ID</th>
+                                            <th style="text-align: left;">Data</th>
+                                            <th style="text-align: left;">Cliente</th>
+                                            <th style="text-align: left;">Total</th>
+                                            <th style="text-align: left;">Forma PGTO</th>
+                                            <th style="text-align: center;">Status</th>
+                                            <th style="text-align: center;">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lista-historico-vendas"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> <!-- Fim Aba Histórico -->
+
+                    <div id="aba-financeiro" class="tab-content">
+                        <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+                            <h3>💰 Gestão Financeira (Contas a Pagar e Receber)</h3>
+
+                            <div class="responsive-grid" style="margin-bottom: 20px;">
+                                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
+                                    <h4 style="margin-top: 0; color: #28a745;">Total a Receber</h4>
+                                    <h2 id="fin-total-receber" style="margin: 0; color: #28a745;">R$ 0,00</h2>
+                                </div>
+                                <div style="background: #f8dbdf; padding: 15px; border-radius: 8px;">
+                                    <h4 style="margin-top: 0; color: #dc3545;">Total a Pagar</h4>
+                                    <h2 id="fin-total-pagar" style="margin: 0; color: #dc3545;">R$ 0,00</h2>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
+                                <button onclick="abrirModalFinanceiro('Receita')"
+                                    style="background: #28a745; width: fit-content;">+
+                                    Nova
+                                    Receita</button>
+                                <button onclick="abrirModalFinanceiro('Despesa')"
+                                    style="background: #dc3545; width: fit-content;">+
+                                    Nova
+                                    Despesa</button>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr style="background: #f4f4f4; text-align: left;">
+                                            <th style="padding: 10px;">Vencimento</th>
+                                            <th>Descrição</th>
+                                            <th>Origem</th>
+                                            <th>Tipo</th>
+                                            <th>Valor</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lista-financeiro"></tbody>
+                                </table>
+                            </div>
+
+                            <div id="modal-financeiro" class="modal-overlay">
+                                <div class="modal-content" style="border-top: 5px solid #007bff;"
+                                    id="modal-financeiro-border">
+                                    <h3 id="modal-financeiro-titulo">➕ Novo Lançamento</h3>
+                                    <input type="hidden" id="fin-tipo">
+                                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                                        <input type="text" id="fin-descricao"
+                                            placeholder="Descrição (Ex: Conta de Luz, Venda Avulsa)">
+                                        <input type="number" step="0.01" id="fin-valor" placeholder="Valor (R$)">
+                                        <input type="date" id="fin-vencimento">
+                                        <select id="fin-status">
+                                            <option value="Pendente">Pendente</option>
+                                            <option value="Pago">Pago/Recebido</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                        <button onclick="salvarLancamentoFinanceiro()" id="btn-salvar-fin"
+                                            style="background: #007bff; width: 48%;">Salvar</button>
+                                        <button
+                                            onclick="document.getElementById('modal-financeiro').style.display='none'"
+                                            style="background: #6c757d; width: 48%;">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- Fim Aba Financeiro -->
+
+                        <div id="aba-fornecedores" class="tab-content">
+                            <div class="card" style="margin-top: 20px; border-top: 3px solid #ff7f50;">
+                                <h3>🏢 Cadastrar Novo Fornecedor</h3>
+                                <div class="responsive-grid">
+                                    <input type="text" id="forn-razao" placeholder="Razão Social">
+                                    <input type="text" id="forn-cnpj" placeholder="CNPJ">
+                                    <input type="text" id="forn-contato" placeholder="Nome do Contato">
+                                    <input type="text" id="forn-telefone" placeholder="Telefone / WhatsApp">
+                                </div>
+                                <button onclick="salvarFornecedor()"
+                                    style="display: block; background: #ff7f50; width: fit-content; margin: 10px auto 0;">
+                                    Registrar Fornecedor
+                                </button>
+                            </div>
+
+                            <div class="card" style="margin-top: 20px; border-top: 3px solid #6c757d;">
+                                <h3>📋 Lista de Fornecedores</h3>
+                                <div class="table-responsive">
+                                    <table style="width: 100%; border-collapse: collapse;">
+                                        <thead>
+                                            <tr style="background: #f4f4f4; text-align: left;">
+                                                <th style="padding: 10px;">ID</th>
+                                                <th>Razão Social</th>
+                                                <th>CNPJ</th>
+                                                <th>Contato</th>
+                                                <th>Telefone</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="corpo-tabela-fornecedores"></tbody>
+                                    </table>
+                                </div>
+
+                                <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+                                    <h3>📦 Registrar Entrada de Estoque (Pedido de Compra)</h3>
+                                    <p>O produto escolhido terá a sua quantidade somada no estoque atual e deduzida do
+                                        dinheiro da
+                                        InovaClean financeiramente.</p>
+                                    <div class="responsive-grid">
+                                        <div>
+                                            <label>Fornecedor de Origem:</label>
+                                            <select id="ped-fornecedor-id"></select>
+                                        </div>
+                                        <div>
+                                            <label>Produto Recebido:</label>
+                                            <select id="ped-produto-id"></select>
+                                        </div>
+                                        <div>
+                                            <label>Quantidade Recebida:</label>
+                                            <input type="number" id="ped-quantidade" placeholder="Ex: 50" min="1">
+                                        </div>
+                                        <div>
+                                            <label>Preço de Custo (Unitário) Pago R$:</label>
+                                            <input type="number" step="0.01" id="ped-custo" placeholder="Ex: 12.50">
+                                        </div>
+                                    </div>
+                                    <button onclick="registrarPedidoCompra()"
+                                        style="display: block; background: #28a745; width: fit-content; margin: 15px auto 0;">Confirmar
+                                        Entrada e Atualizar
+                                        Estoque</button>
+                                </div>
+
+                                <div id="modal-edicao-fornecedor" class="modal-overlay">
+                                    <div class="modal-content" style="border-top: 5px solid #ff7f50;">
+                                        <h3>✏️ Editando Fornecedor</h3>
+                                        <input type="hidden" id="edit-forn-id">
+                                        <div class="responsive-grid">
+                                            <input type="text" id="edit-forn-razao" placeholder="Razão Social">
+                                            <input type="text" id="edit-forn-cnpj" placeholder="CNPJ">
+                                            <input type="text" id="edit-forn-contato" placeholder="Nome do Contato">
+                                            <input type="text" id="edit-forn-telefone" placeholder="Telefone">
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                                            <button onclick="confirmarEdicaoFornecedor()"
+                                                style="background: #ff7f50; width: 48%;">Salvar
+                                                Alterações</button>
+                                            <button
+                                                onclick="document.getElementById('modal-edicao-fornecedor').style.display='none'"
+                                                style="background: #6c757d; width: 48%;">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- Fim Aba Fornecedores -->
+
+                            <div id="aba-equipe" class="tab-content">
+                                <div class="card" id="admin-panel"
+                                    style="margin-top: 20px; border-top: 3px solid #dc3545;">
+                                    <h3>🛡️ Gerenciar Equipe (Apenas Admin)</h3>
+                                    <p>Altere cargos, remova ou adicione funcionários ao sistema.</p>
+
+
+                                    <div class="table-responsive">
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="background: #f4f4f4; text-align: left;">
+                                                    <th style="padding: 10px;">ID</th>
+                                                    <th>Nome</th>
+                                                    <th>Email</th>
+                                                    <th>Cargo</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="lista-equipe"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <button onclick="toggleFormNovoUsuario()"
+                                        style="display: block; width: fit-content; margin: 20px auto 0; background: #28a745;">
+                                        ➕ Adicionar Novo Membro
+                                    </button>
+
+                                    <div id="form-novo-usuario"
+                                        style="display: none; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-top: 20px;">
+                                        <h4>Dados do Novo Membro</h4>
+                                        <div class="responsive-grid-4">
+                                            <input type="text" id="novo-user-nome" placeholder="Nome">
+                                            <input type="email" id="novo-user-email" placeholder="E-mail">
+                                            <input type="password" id="novo-user-senha" placeholder="Senha">
+                                            <select id="novo-user-cargo">
+                                                <option value="vendedor">Vendedor</option>
+                                                <option value="admin">Administrador</option>
+                                            </select>
+                                        </div>
+                                        <button onclick="cadastrarMembroEquipe()"
+                                            style="display: block; width: fit-content; margin: 10px auto 0; background: #007bff;">
+                                            Confirmar e Adicionar Usuário
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> <!-- Fim Aba Equipe -->
+
+                            <div id="comprovante-print">
+                                <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 10px;">
+                                    <h2 style="margin: 0;">InovaClean</h2>
+                                    <p style="margin: 5px 0;">Distribuidora de Produtos de Limpeza</p>
+                                    <p style="margin: 0;">Bacabal - MA</p>
+                                </div>
+                                <div id="comprovante-conteudo" style="padding-top: 10px;">
+                                </div>
+                                <div
+                                    style="text-align: center; border-top: 1px dashed #000; margin-top: 20px; padding-top: 10px;">
+                                    <p>Obrigado pela preferência!</p>
+                                </div>
+                            </div>
+
+                            <!-- Template de Orçamento em PDF (Oculto) -->
+                            <div id="orcamento-pdf-template" style="display: none;">
+                                <div
+                                    style="font-family: Arial, sans-serif; padding: 40px; color: #333; max-width: 800px; margin: 0 auto;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ccc; padding-bottom: 20px; margin-bottom: 20px;">
+                                        <div>
+                                            <h1 style="color: #007bff; margin: 0;">InovaClean Distribuidora</h1>
+                                            <p style="margin: 5px 0 0;">CNPJ: 00.000.000/0000-00 | Bacabal - MA</p>
+                                            <p style="margin: 5px 0 0;">(00) 00000-0000 | contato@inovaclean.com.br</p>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <h2 style="margin: 0; color: #555;">ORÇAMENTO Nº <span
+                                                    id="pdf-orc-id"></span></h2>
+                                            <p style="margin: 5px 0 0;">Data: <span id="pdf-orc-data"></span></p>
+                                            <p style="margin: 5px 0 0; color: #dc3545; font-weight: bold;">Validade: 7
+                                                Dias</p>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                                        <h3 style="margin: 0 0 10px; color: #444;">DADOS DO CLIENTE</h3>
+                                        <p style="margin: 3px 0;"><strong>Nome Fantasia:</strong> <span
+                                                id="pdf-cli-nome"></span></p>
+                                        <p style="margin: 3px 0;"><strong>CNPJ:</strong> <span id="pdf-cli-cnpj"></span>
+                                        </p>
+                                        <p style="margin: 3px 0;"><strong>Cidade/UF:</strong> <span
+                                                id="pdf-cli-local"></span></p>
+                                    </div>
+
+                                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                                        <thead>
+                                            <tr style="background: #007bff; color: white;">
+                                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">
+                                                    Qnt.</th>
+                                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">
+                                                    Und.</th>
+                                                <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">
+                                                    Descrição do Produto
+                                                </th>
+                                                <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                                    Valor Unit.</th>
+                                                <th style="padding: 10px; text-align: right; border: 1px solid #ddd;">
+                                                    Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pdf-itens-corpo">
+                                            <!-- Itens renderizados aqui -->
+                                        </tbody>
+                                    </table>
+
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #ccc; padding-top: 15px;">
+                                        <div style="width: 60%; font-size: 12px; color: #666;">
+                                            <p><strong>Observações:</strong> O não fechamento deste pedido dentro de 7
+                                                dias úteis pode
+                                                acarretar em alterações de preço derivadas de reajuste de estoque de
+                                                fornecedores primários.
+                                            </p>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <span style="font-size: 16px; font-weight: bold; color: #555;">VALOR
+                                                TOTAL:</span>
+                                            <h2 style="margin: 5px 0 0; color: #28a745; font-size: 28px;">R$ <span
+                                                    id="pdf-orc-total"></span>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- Fim de .container -->
+                    </div> <!-- Fim de #dashboard-area -->
+
+                    <script
+                        src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script src="/js/app.js"></script>
 </body>
