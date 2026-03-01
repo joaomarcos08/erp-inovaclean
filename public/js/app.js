@@ -6,6 +6,13 @@ window.filtroDataFim = null;
 window.carrinho = [];
 window.usuarioLogado = null;
 
+// Atalho do Enter
+window.handleLoginEnter = function (event) {
+    if (event.key === 'Enter') {
+        fazerLogin();
+    }
+};
+
 // ============ AUTENTICAÇÃO ============
 window.fazerLogin = async function () {
     const email = document.getElementById('email').value;

@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet'); // <--- Proteção de cabeçalhos (XSS e Sniffing)
 const { apiLimiter } = require('./middleware/rateLimiter'); // <--- Prevenção anti-DDOS 
@@ -27,7 +28,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')); // Serve seu index.html automaticamente
+app.use(express.static(path.join(__dirname, 'public'))); // Garante localização do frontend
 
 // Importação das Rotas
 const authRoutes = require('./routes/auth');
@@ -53,6 +54,12 @@ app.use('/api/financeiro', financeiroRoutes);
 app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/fornecedores', fornecedoresRoutes);
 
+// ROTA CURINGA (CATCH-ALL) DO FRONTEND
+// Para a nuvem Vercel sempre achar o index.html na raiz (Cannot GET /)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Middleware de erro global
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -63,12 +70,20 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-  console.log(`🚀 ERP InovaClean Rodando em Bacabal na porta ${PORT}`);
-});
 
-// Tratamento de erros não capturados
-process.on('unhandledRejection', (err) => {
-  console.error('Unhandled Rejection:', err);
-  server.close(() => process.exit(1));
-});
+// Só abre a porta fixa se o arquivo for rodado diretamente (Ex: npm run dev)
+// Na Vercel, o arquivo será importado como um módulo serverless
+if (require.main === module) {
+  const server = app.listen(PORT, () => {
+    console.log(`🚀 ERP InovaClean Rodando em Bacabal na porta ${PORT}`);
+  });
+
+  // Tratamento de erros não capturados
+  process.on('unhandledRejection', (err) => {
+    console.error('Unhandled Rejection:', err);
+    server.close(() => process.exit(1));
+  });
+}
+
+// Exportar o app para a Vercel consumir nas funções Serverless
+module.exports = app;

@@ -17,8 +17,8 @@
         <div class="login-right">
             <div class="login-form-container">
                 <h3>Acesse sua Conta</h3>
-                <input type="email" id="email" placeholder="E-mail">
-                <input type="password" id="senha" placeholder="Senha">
+                <input type="email" id="email" placeholder="E-mail" onkeypress="handleLoginEnter(event)">
+                <input type="password" id="senha" placeholder="Senha" onkeypress="handleLoginEnter(event)">
                 <button onclick="fazerLogin()">Entrar no Sistema</button>
                 <div class="login-footer">
                     &copy; 2026 InovaClean ERP. Todos os direitos reservados.
