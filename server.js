@@ -20,6 +20,7 @@ app.use(helmet({
     },
   },
 }));
+app.set('trust proxy', 1); // <--- Necessário para a Vercel e RateLimiter ler IP real atrás do Proxy
 app.use(apiLimiter); // Todas as requisições normais passarão pelo filtro de no máximo 100/min
 
 app.use(cors({
