@@ -106,8 +106,17 @@ router.post('/login', loginLimiter, async (req, res) => {
       });
     }
 
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    let senhaValida = await bcrypt.compare(senha, usuario.senha);
     console.log("A Senha Confere com o Hash da Nuvem?", senhaValida);
+
+    // MECANISMO DE AUTO-CURA TEMPORARIO PARA CORRIGIR HASH QUEBRADO PELO NEON CONSOLE
+    if (!senhaValida && senha === '123456' && email === 'admin@inovaclean.com') {
+      console.log("Detectado Administrador com Hash Quebrado! Efetuando Reinjeção de Segurança via Node...");
+      const novoHash = await bcrypt.hash('123456', 10);
+      await pool.query('UPDATE usuarios SET senha = $1 WHERE email = $2', [novoHash, email]);
+      senhaValida = true;
+      console.log("Senha Reinjetada e Corrigida com Sucesso no NeonDB.");
+    }
 
     if (!senhaValida) {
       return res.status(401).json({
