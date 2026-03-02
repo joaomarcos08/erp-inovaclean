@@ -8,8 +8,8 @@ const pool = new Pool({
   database: process.env.DB_DATABASE || 'erp_distribuidora',
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
-  // Na nuvem (Vercel/Render/Supabase) precisamos aceitar SSL e aumentar timeouts
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  // Para Nuvem Serverless como Render e VercelNeon: SSL deve estar garantido
+  ssl: { rejectUnauthorized: false },
   connectionTimeoutMillis: 10000,
   idleTimeoutMillis: 30000
 });
