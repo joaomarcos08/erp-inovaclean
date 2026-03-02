@@ -9,7 +9,7 @@ CREATE TABLE usuarios (
 
 -- Inserindo o Usuário Padrão Vercel: admin@inovaclean.com / Senha: 123456
 INSERT INTO usuarios (nome, email, senha, cargo) 
-VALUES ('Administrador', 'admin@inovaclean.com', '$2b$10$YIvxHU8lNlPDPvVzHgHi.uBNWlbQzNl0BzNKMN.F8oF8kL8Rw6iZG', 'Admin');
+VALUES ('Administrador', 'admin@inovaclean.com', '$2b$10$FVvXqtrQSra/VUrCMzay2e4hbvbsjii2tzPn.ug3.xnjxPPJCwx3Hi', 'Admin');
 
 -- 1. Categorias de Produtos (Ex: Hospitalar, Escolar, Escritório)
 CREATE TABLE categorias (
