@@ -1,3 +1,16 @@
+-- 0. Usuários do Sistema 
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    cargo VARCHAR(50) DEFAULT 'Vendedor'
+);
+
+-- Inserindo o Usuário Padrão Vercel: admin@inovaclean.com / Senha: 123456
+INSERT INTO usuarios (nome, email, senha, cargo) 
+VALUES ('Administrador', 'admin@inovaclean.com', '$2b$10$YIvxHU8lNlPDPvVzHgHi.uBNWlbQzNl0BzNKMN.F8oF8kL8Rw6iZG', 'Admin');
+
 -- 1. Categorias de Produtos (Ex: Hospitalar, Escolar, Escritório)
 CREATE TABLE categorias (
     id SERIAL PRIMARY KEY,
