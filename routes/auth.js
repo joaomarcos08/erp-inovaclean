@@ -89,7 +89,17 @@ router.post('/login', loginLimiter, async (req, res) => {
 
     const usuario = userRes.rows[0];
 
+    // DEBUG VERCEL (Remover depois):
+    console.log("=== VERCEL NEON LOGIN DEBUG ===");
+    console.log("Tentando Logar com E-mail:", email);
+    console.log("Usuário retornado do banco:", usuario ? { ...usuario, senha: '[hash criptografado - oculto para dicionar]' } : null);
+
+    if (usuario) {
+      console.log("Hash de Senha Gravado na Nuvem:", usuario.senha.substring(0, 15) + "...");
+    }
+
     if (!usuario) {
+      console.log("FALHA: Usuário não existe no banco de dados.");
       return res.status(401).json({
         success: false,
         message: "E-mail ou senha inválidos"
@@ -97,6 +107,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     }
 
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    console.log("A Senha Confere com o Hash da Nuvem?", senhaValida);
 
     if (!senhaValida) {
       return res.status(401).json({
