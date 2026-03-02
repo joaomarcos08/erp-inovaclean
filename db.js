@@ -1,18 +1,28 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Configurações de acesso ao banco
-const pool = new Pool({
-  user: process.env.PGUSER || process.env.DB_USER || 'postgres',
-  host: process.env.PGHOST || process.env.DB_HOST || 'localhost',
-  database: process.env.PGDATABASE || process.env.DB_DATABASE || 'erp_distribuidora',
-  password: process.env.PGPASSWORD || process.env.DB_PASSWORD,
-  port: process.env.PGPORT ? parseInt(process.env.PGPORT) : (process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432),
-  // Para Nuvem Serverless como Render e VercelNeon: SSL deve estar garantido
-  ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 10000,
-  idleTimeoutMillis: 30000
-});
+// URL Mágica Injetada pela Vercel/Neon (Contém senha, porta, host e ssl tudo numa linha)
+const isProduction = process.env.NODE_ENV === 'production' || !!process.env.POSTGRES_URL;
+
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+
+const poolConfig = connectionString
+  ? {
+    connectionString,
+    // Se tiver Serverless / Prod garantimos o reject false (alguns envs falham sem isso)
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 30000
+  }
+  : {
+    user: process.env.DB_USER || 'postgres',
+    host: process.env.DB_HOST || 'localhost',
+    database: process.env.DB_DATABASE || 'erp_distribuidora',
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+  };
+
+const pool = new Pool(poolConfig);
 
 // Tratamento passivo de erros de conexão (NÃO DESLIGAR O SERVERLESS)
 pool.on('error', (err) => {
