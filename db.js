@@ -8,11 +8,11 @@ const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 const poolConfig = connectionString
   ? {
-    connectionString,
-    // Se tiver Serverless / Prod garantimos o reject false (alguns envs falham sem isso)
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10000,
-    idleTimeoutMillis: 30000
+    // Adiciona o parâmetro recomendado pela Vercel/Neon para conexões Serverless (via String API)
+    connectionString: `${connectionString}${connectionString.includes('?') ? '&' : '?'}sslmode=require`,
+    // Evita o Idle Timeout (Lambda fecha abrupto) e evita o Pool Connection Crash
+    // Deixa Serverless lidar com a escalabilidade livremente:
+    ssl: { rejectUnauthorized: false }
   }
   : {
     user: process.env.DB_USER || 'postgres',
