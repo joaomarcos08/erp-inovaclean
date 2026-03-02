@@ -3,11 +3,11 @@ require('dotenv').config();
 
 // Configurações de acesso ao banco
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_DATABASE || 'erp_distribuidora',
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+  user: process.env.PGUSER || process.env.DB_USER || 'postgres',
+  host: process.env.PGHOST || process.env.DB_HOST || 'localhost',
+  database: process.env.PGDATABASE || process.env.DB_DATABASE || 'erp_distribuidora',
+  password: process.env.PGPASSWORD || process.env.DB_PASSWORD,
+  port: process.env.PGPORT ? parseInt(process.env.PGPORT) : (process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432),
   // Para Nuvem Serverless como Render e VercelNeon: SSL deve estar garantido
   ssl: { rejectUnauthorized: false },
   connectionTimeoutMillis: 10000,
