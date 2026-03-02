@@ -72,9 +72,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 
-// Só abre a porta fixa se o arquivo for rodado diretamente (Ex: npm run dev)
-// Na Vercel, o arquivo será importado como um módulo serverless
-if (require.main === module) {
+// Só abre a porta fixa local se NÃO estiver rodando dentro do Serverless do Vercel
+if (!process.env.VERCEL) {
   const server = app.listen(PORT, () => {
     console.log(`🚀 ERP InovaClean Rodando em Bacabal na porta ${PORT}`);
   });
