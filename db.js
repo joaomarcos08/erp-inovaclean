@@ -8,11 +8,12 @@ const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 
 const poolConfig = connectionString
   ? {
-    // Adiciona o parâmetro recomendado pela Vercel/Neon para conexões Serverless (via String API)
-    connectionString: `${connectionString}${connectionString.includes('?') ? '&' : '?'}sslmode=require`,
-    // Evita o Idle Timeout (Lambda fecha abrupto) e evita o Pool Connection Crash
-    // Deixa Serverless lidar com a escalabilidade livremente:
-    ssl: { rejectUnauthorized: false }
+    connectionString,
+    ssl: { rejectUnauthorized: false },
+    // Segurança Severless MAX: Vercel detesta portas TCP inativas ocupando espaço na memória dos Edge Nodes
+    max: 2, // Limite baixo para serverless
+    idleTimeoutMillis: 10, // Mata a conexão em 10ms após ocionar, impedindo a Vercel de jogar erro de encerramento bruto depois
+    connectionTimeoutMillis: 15000,
   }
   : {
     user: process.env.DB_USER || 'postgres',
