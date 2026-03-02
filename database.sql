@@ -55,9 +55,6 @@ VALUES ('Hospitalar', 'Produtos de desinfecção para clínicas e hospitais');
 CREATE TABLE vendas (
     id SERIAL PRIMARY KEY,
     cliente_id INTEGER REFERENCES clientes(id),
-    vendedor_id INTEGER REFERENCES usuarios(id),
-    forma_pagamento VARCHAR(50),
-    status VARCHAR(50) DEFAULT 'Concluída',
     data_venda TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     valor_total DECIMAL(10, 2) DEFAULT 0.00
 );
@@ -77,10 +74,9 @@ CREATE TABLE financeiro (
     descricao VARCHAR(255) NOT NULL,
     valor DECIMAL(10, 2) NOT NULL,
     tipo VARCHAR(50) NOT NULL, -- 'Receita' ou 'Despesa'
-    conta_origem VARCHAR(100), -- Ex: 'Venda #10', 'Pedido #5'
     data_vencimento DATE NOT NULL,
     data_pagamento DATE,
-    status VARCHAR(50) DEFAULT 'Pendente', -- 'Pendente', 'Pago', 'Atrasado', 'Cancelado'
+    status VARCHAR(50) DEFAULT 'Pendente', -- 'Pendente', 'Pago', 'Atrasado'
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

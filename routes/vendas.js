@@ -22,10 +22,10 @@ router.post('/', verificarJWT, async (req, res) => {
             valor_total += item.preco_unitario * item.quantidade;
         });
 
-        // Insere venda
+        // Insere venda (Sem campos descontinuados: vendedor_id, forma_pagamento, status)
         const vendaResult = await client.query(
-            'INSERT INTO vendas (cliente_id, valor_total, data_venda, vendedor_id, forma_pagamento, status) VALUES ($1, $2, NOW(), $3, $4, $5) RETURNING *',
-            [cliente_id, valor_total, req.usuarioId || null, forma_pagamento || 'Dinheiro', 'Concluída']
+            'INSERT INTO vendas (cliente_id, valor_total, data_venda) VALUES ($1, $2, NOW()) RETURNING *',
+            [cliente_id, valor_total]
         );
 
         const venda_id = vendaResult.rows[0].id;
@@ -52,9 +52,9 @@ router.post('/', verificarJWT, async (req, res) => {
         }
 
         await client.query(
-            `INSERT INTO financeiro (descricao, valor, tipo, data_vencimento, status, data_pagamento, conta_origem) 
-             VALUES ($1, $2, 'Receita', CURRENT_DATE, $3, ${dataPgto}, $4)`,
-            [`Receita de Venda #${venda_id}`, valor_total, statusFinanceiro, `Venda #${venda_id}`]
+            `INSERT INTO financeiro (descricao, valor, tipo, data_vencimento, status, data_pagamento) 
+             VALUES ($1, $2, 'Receita', CURRENT_DATE, $3, ${dataPgto})`,
+            [`Receita de Venda #${venda_id}`, valor_total, statusFinanceiro]
         );
 
         await client.query('COMMIT');
@@ -137,17 +137,14 @@ router.post('/:id/cancelar', verificarJWT, async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // 1. Verificar se a venda existe e não está cancelada
-        const vendaCheck = await client.query('SELECT status FROM vendas WHERE id = $1', [id]);
+        // 1. Verificar se a venda existe
+        const vendaCheck = await client.query('SELECT id FROM vendas WHERE id = $1', [id]);
         if (vendaCheck.rows.length === 0) {
             throw new Error('Venda não encontrada');
         }
-        if (vendaCheck.rows[0].status === 'Cancelada') {
-            throw new Error('Venda já está cancelada');
-        }
 
-        // 2. Atualizar status da venda
-        await client.query("UPDATE vendas SET status = 'Cancelada' WHERE id = $1", [id]);
+        // 2. Deletar a Venda Física do Relatório (Como a tabela não tem mais coluna 'status' de Cancelada)
+        await client.query("DELETE FROM vendas WHERE id = $1", [id]);
 
         // 3. Estornar estoque
         const itens = await client.query('SELECT produto_id, quantidade FROM itens_venda WHERE venda_id = $1', [id]);
@@ -158,10 +155,10 @@ router.post('/:id/cancelar', verificarJWT, async (req, res) => {
             );
         }
 
-        // 4. Cancelar financeiro
+        // 4. Cancelar financeiro atrelado alterando o título, já que não temos 'conta_origem' nem flag restrita.
         await client.query(
-            "UPDATE financeiro SET status = 'Cancelado' WHERE conta_origem = $1",
-            [`Venda #${id}`]
+            "UPDATE financeiro SET status = 'Atrasado', descricao = $1 WHERE descricao LIKE $2",
+            [`[CANCELADO] Venda #${id}`, `Receita de Venda #${id}%`]
         );
 
         await client.query('COMMIT');

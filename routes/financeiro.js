@@ -21,7 +21,8 @@ router.get('/', verificarJWT, async (req, res) => {
 
 // Registrar um novo lançamento (Despesa ou Receita)
 router.post('/', verificarJWT, async (req, res) => {
-    const { descricao, valor, tipo, data_vencimento, status, conta_origem } = req.body;
+    // (Removido 'conta_origem' que foi deletado do PostgreSQL pelo usuário)
+    const { descricao, valor, tipo, data_vencimento, status } = req.body;
 
     if (!descricao || !valor || !tipo || !data_vencimento) {
         return res.status(400).json({ success: false, message: 'Descrição, valor, tipo e data de vencimento são obrigatórios' });
@@ -32,9 +33,9 @@ router.post('/', verificarJWT, async (req, res) => {
         const dataPagamento = finalStatus === 'Pago' ? new Date().toISOString().split('T')[0] : null;
 
         const resultado = await pool.query(
-            `INSERT INTO financeiro (descricao, valor, tipo, data_vencimento, status, data_pagamento, conta_origem) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-            [descricao, valor, tipo, data_vencimento, finalStatus, dataPagamento, conta_origem || null]
+            `INSERT INTO financeiro (descricao, valor, tipo, data_vencimento, status, data_pagamento) 
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+            [descricao, valor, tipo, data_vencimento, finalStatus, dataPagamento]
         );
         res.status(201).json({
             success: true,
