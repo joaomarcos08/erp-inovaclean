@@ -51,7 +51,8 @@ window.fazerLogin = async function () {
         // Carrega dados do dashboard
         await carregarDashboard();
 
-        if (data.usuario.cargo === 'admin') {
+        const cargoNormalizado = data.usuario.cargo ? data.usuario.cargo.toLowerCase() : '';
+        if (cargoNormalizado === 'admin' || cargoNormalizado === 'administrador') {
             document.getElementById('btn-tab-equipe').style.display = 'inline-block';
             carregarUsuarios();
         } else {
@@ -103,7 +104,8 @@ window.initApp = async function () {
             await carregarDashboard();
 
             // Configurações e acessos de Admin
-            if (usuario.cargo === 'admin') {
+            const cargoNormalizado = usuario.cargo ? usuario.cargo.toLowerCase() : '';
+            if (cargoNormalizado === 'admin' || cargoNormalizado === 'administrador') {
                 document.getElementById('btn-tab-equipe').style.display = 'inline-block';
                 carregarUsuarios();
             } else {
