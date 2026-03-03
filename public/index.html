@@ -29,10 +29,9 @@
 
     <div id="dashboard-area" style="display:none;">
         <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="flex-between-center mb-4">
                 <h2>Painel de Controle ERP - Bacabal/MA</h2>
-                <button id="btn-logout" onclick="logout()"
-                    style="background: #dc3545; padding: 8px 15px; font-size: 14px;">
+                <button id="btn-logout" onclick="logout()" class="btn-danger btn-sm">
                     <i class="fas fa-sign-out-alt"></i> Sair
                 </button>
             </div>
@@ -100,42 +99,38 @@
                 </div>
 
                 <!-- Gráficos do Dashboard -->
-                <div
-                    style="display: none !important; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; align-items: center; gap: 15px;">
-                    <h4 style="margin: 0; padding-right: 15px; border-right: 2px solid #ccc;">Filtro dos Gráficos:</h4>
-                    <label style="margin: 0; font-weight: bold;">Início:</label>
-                    <input type="date" id="filtro-grafico-inicio" style="margin: 0; width: auto;">
+                <div class="filter-bar d-none" id="graficos-filtro-container">
+                    <h4>Filtro dos Gráficos:</h4>
+                    <label>Início:</label>
+                    <input type="date" id="filtro-grafico-inicio">
 
-                    <label style="margin: 0; font-weight: bold;">Fim:</label>
-                    <input type="date" id="filtro-grafico-fim" style="margin: 0; width: auto;">
+                    <label>Fim:</label>
+                    <input type="date" id="filtro-grafico-fim">
 
-                    <button onclick="aplicarFiltrosGraficos()"
-                        style="margin: 0; background: #007bff; white-space: nowrap;">
+                    <button onclick="aplicarFiltrosGraficos()" class="btn-primary">
                         Aplicar Filtros nos Gráficos
                     </button>
                 </div>
 
-                <div
-                    style="display: none !important; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; align-items: stretch;">
-                    <div class="card" style="margin: 0; display: flex; flex-direction: column;">
+                <div class="grid-2-1 d-none" id="graficos-container">
+                    <div class="card card-h-100">
                         <h3>📈 Tendência de Vendas (Últimos 7 Dias)</h3>
-                        <div style="position: relative; flex-grow: 1; height: 300px; width: 100%;">
+                        <div class="chart-container-large">
                             <canvas id="chart-faturamento"></canvas>
                         </div>
                     </div>
-                    <div class="card" style="margin: 0; display: flex; flex-direction: column;">
+                    <div class="card card-h-100">
                         <h3>🥧 Vendas por Categoria (Mês Atual)</h3>
-                        <div
-                            style="position: relative; flex-grow: 1; height: 300px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                        <div class="chart-container-center">
                             <canvas id="chart-categorias" style="max-height: 100%; max-width: 100%;"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-                    <div class="card" style="border-top: 3px solid #fd7e14;">
+                <div class="grid-1-1">
+                    <div class="card border-top-orange">
                         <h3>💸 Registrar Nova Despesa</h3>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="flex-column-gap">
                             <input type="text" id="desp-descricao" placeholder="Descrição (ex: Conta de Luz, Aluguel)">
                             <input type="number" step="0.01" id="desp-valor" placeholder="Valor (R$)">
                             <input type="date" id="desp-vencimento">
@@ -143,38 +138,37 @@
                                 <option value="Pendente">Pendente (A Pagar)</option>
                                 <option value="Pago">Pago</option>
                             </select>
-                            <button onclick="registrarDespesa()" style="background: #fd7e14;">Salvar Despesa</button>
+                            <button onclick="registrarDespesa()" class="btn-orange">Salvar Despesa</button>
                         </div>
                     </div>
 
-                    <div class="card" style="border-top: 3px solid #dc3545;">
+                    <div class="card border-top-danger">
                         <h3>🗓️ Compromissos Financeiros (Vencem Hoje)</h3>
-                        <ul id="lista-compromissos" style="padding-left: 20px; margin-top: 10px; color: #dc3545;"></ul>
+                        <ul id="lista-compromissos" class="danger-list"></ul>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-                    <div class="card" style="border-top: 3px solid #ffc107; margin: 0;">
+                <div class="grid-1-1">
+                    <div class="card border-top-warning m-0">
                         <h3>⚠️ Alerta de Estoque Crítico</h3>
-                        <ul id="lista-estoque" style="padding-left: 20px; margin-top: 10px; color: #dc3545;"></ul>
+                        <ul id="lista-estoque" class="danger-list"></ul>
                     </div>
 
-                    <div class="card" style="border-top: 3px solid #17a2b8; margin: 0;">
+                    <div class="card border-top-info m-0">
                         <h3>🛒 Sugestão de Compra (Prevenção)</h3>
-                        <ul id="lista-sugestao-compra" style="padding-left: 20px; margin-top: 10px; color: #17a2b8;">
-                        </ul>
+                        <ul id="lista-sugestao-compra" class="info-list"></ul>
                     </div>
                 </div>
 
-                <div class="card" style="border-top: 3px solid #6c757d; margin-bottom: 25px;">
+                <div class="card border-top-gray mb-4">
                     <h3>💤 Clientes Inativos (> 30 dias sem compras em Bacabal)</h3>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <div class="table-responsive">
+                        <table class="default-table">
                             <thead>
-                                <tr style="background: #f4f4f4;">
-                                    <th style="padding: 10px; border-bottom: 2px solid #ddd;">ID</th>
-                                    <th style="border-bottom: 2px solid #ddd;">Nome Fantasia</th>
-                                    <th style="border-bottom: 2px solid #ddd;">Última Compra</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome Fantasia</th>
+                                    <th>Última Compra</th>
                                 </tr>
                             </thead>
                             <tbody id="corpo-tabela-inativos"></tbody>
@@ -186,7 +180,7 @@
         </div> <!-- Fim Aba Dashboard -->
 
         <div id="aba-clientes" class="tab-content">
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+            <div class="card border-top-success mt-4">
                 <h3>👤 Cadastrar Novo Cliente</h3>
                 <div class="responsive-grid">
                     <input type="text" id="cli-nome" placeholder="Nome Fantasia (Ex: Hospital Regional)">
@@ -200,13 +194,12 @@
                     <input type="text" id="cli-cidade" value="Bacabal" placeholder="Cidade">
                     <input type="text" id="cli-estado" value="MA" maxlength="2" placeholder="UF">
                 </div>
-                <button onclick="cadastrarCliente()"
-                    style="display: block; width: fit-content; margin: 10px auto 0; background: #28a745;">
+                <button onclick="cadastrarCliente()" class="btn-success btn-auto my-custom">
                     Salvar Cliente
                 </button>
             </div>
 
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
+            <div class="card border-top-purple mt-4">
                 <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
                 <div class="responsive-grid">
                     <input type="text" id="prod-nome" placeholder="Nome do Produto (Ex: Desinfetante Pinheiro 5L)">
@@ -221,19 +214,18 @@
                     <input type="number" id="prod-estoque-minimo" value="10" placeholder="Estoque Mínimo (Alerta)">
                     <input type="text" id="prod-unidade" value="Unidade" placeholder="Unidade (Ex: Galão, Caixa)">
                 </div>
-                <button onclick="cadastrarProduto()"
-                    style="display: block; width: fit-content; margin: 10px auto 0; background: #6f42c1;">
+                <button onclick="cadastrarProduto()" class="btn-purple btn-auto my-custom">
                     Salvar Novo Produto no Catálogo
                 </button>
             </div>
 
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+            <div class="card border-top-success mt-4">
                 <h3>👥 Lista de Clientes / Editar</h3>
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: collapse;" id="tabela-clientes-edit">
+                    <table class="default-table" id="tabela-clientes-edit">
                         <thead>
-                            <tr style="background: #f4f4f4; text-align: left;">
-                                <th style="padding: 10px;">ID</th>
+                            <tr>
+                                <th>ID</th>
                                 <th>Nome Fantasia</th>
                                 <th>CNPJ</th>
                                 <th>Tipo</th>
@@ -245,7 +237,7 @@
                 </div>
 
                 <div id="modal-edicao-cliente" class="modal-overlay">
-                    <div class="modal-content" style="border-top: 5px solid #28a745;">
+                    <div class="modal-content border-top-success">
                         <h3>✏️ Editando Cliente: <span id="edit-cli-nome-titulo"></span></h3>
                         <input type="hidden" id="edit-cli-id">
                         <div class="responsive-grid">
@@ -260,11 +252,11 @@
                             <input type="text" id="edit-cli-cidade" placeholder="Cidade">
                             <input type="text" id="edit-cli-estado" placeholder="UF" maxlength="2">
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <button onclick="salvarEdicaoCliente()" style="background: #28a745; width: 48%;">Salvar
+                        <div class="flex-btn-group">
+                            <button onclick="salvarEdicaoCliente()" class="btn-success flex-fill-btn">Salvar
                                 Alterações</button>
                             <button onclick="document.getElementById('modal-edicao-cliente').style.display='none'"
-                                style="background: #6c757d; width: 48%;">Cancelar</button>
+                                class="btn-secondary flex-fill-btn">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -272,13 +264,13 @@
         </div> <!-- Fim aba clientes -->
 
         <div id="aba-produtos" class="tab-content">
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #6f42c1;">
+            <div class="card border-top-purple mt-4">
                 <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: collapse;" id="tabela-produtos-edit">
+                    <table class="default-table" id="tabela-produtos-edit">
                         <thead>
-                            <tr style="background: #f4f4f4; text-align: left;">
-                                <th style="padding: 10px;">ID</th>
+                            <tr>
+                                <th>ID</th>
                                 <th>Nome</th>
                                 <th>Preço Venda</th>
                                 <th>Estoque Atual</th>
@@ -290,7 +282,7 @@
                 </div>
 
                 <div id="modal-edicao" class="modal-overlay">
-                    <div class="modal-content" style="border-top: 5px solid #007bff;">
+                    <div class="modal-content border-top-primary">
                         <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
                         <input type="hidden" id="edit-id">
                         <div class="responsive-grid">
@@ -299,11 +291,11 @@
                             <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
                             <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <button onclick="salvarEdicao()" style="background: #007bff; width: 48%;">Salvar
+                        <div class="flex-btn-group">
+                            <button onclick="salvarEdicao()" class="btn-primary flex-fill-btn">Salvar
                                 Alterações</button>
                             <button onclick="document.getElementById('modal-edicao').style.display='none'"
-                                style="background: #6c757d; width: 48%;">Cancelar</button>
+                                class="btn-secondary flex-fill-btn">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -311,7 +303,7 @@
         </div> <!-- Fim Aba Produtos -->
 
         <div id="aba-vendas" class="tab-content">
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
+            <div class="card border-top-info mt-4">
                 <h3>🛒 Registrar Nova Venda</h3>
 
                 <label>Selecione o Cliente:</label>
@@ -325,25 +317,23 @@
                 <label>Quantidade:</label>
                 <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
 
-                <button onclick="adicionarAoCarrinho()" style="background:#17a2b8">Adicionar Item</button>
+                <button onclick="adicionarAoCarrinho()" class="btn-info">Adicionar Item</button>
 
                 <h4>Itens no Carrinho:</h4>
                 <ul id="carrinho-lista"></ul>
 
-                <div style="display: flex; gap: 10px; margin-top:10px;">
-                    <select id="forma-pagamento" style="display:none; flex:1; height: 40px;">
+                <div class="flex-btn-group">
+                    <select id="forma-pagamento" class="flex-fill-btn d-none">
                         <option value="Dinheiro">Dinheiro</option>
                         <option value="PIX">PIX</option>
                         <option value="Cartão de Crédito">Cartão de Crédito</option>
                         <option value="Cartão de Débito">Cartão de Débito</option>
                         <option value="Boleto">Boleto (A Prazo)</option>
                     </select>
-                    <button onclick="finalizarVenda()" id="btn-finalizar"
-                        style="flex:1; display:none; background:#28a745; height: 40px; margin: 0;">
+                    <button onclick="finalizarVenda()" id="btn-finalizar" class="btn-success flex-fill-btn d-none">
                         Confirmar Venda
                     </button>
-                    <button onclick="salvarOrcamento()" id="btn-orcamento"
-                        style="flex:1; display:none; background:#ffc107; color:#000; height: 40px; margin: 0;">
+                    <button onclick="salvarOrcamento()" id="btn-orcamento" class="btn-warning flex-fill-btn d-none">
                         Salvar Orçamento
                     </button>
                 </div>
@@ -352,14 +342,14 @@
     </div> <!-- Fim Aba Vendas -->
 
     <div id="aba-orcamentos" class="tab-content">
-        <div class="card" style="margin-top: 20px; border-top: 3px solid #ffc107;">
+        <div class="card border-top-warning mt-4">
             <h3>📑 Histórico de Orçamentos</h3>
 
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse; margin-top:15px;" id="tabela-orcamentos">
+                <table class="default-table mt-3" id="tabela-orcamentos">
                     <thead>
-                        <tr style="background: #f4f4f4; text-align: left;">
-                            <th style="padding: 10px;">ID</th>
+                        <tr>
+                            <th>ID</th>
                             <th>Data</th>
                             <th>Cliente</th>
                             <th>Valor Total</th>
@@ -374,49 +364,36 @@
     </div> <!-- Fim Aba Orcamentos -->
 
     <div id="aba-historico" class="tab-content">
-        <div class="card" style="margin-top: 20px; border-top: 3px solid #17a2b8;">
-            <div class="card" style="background: #f8f9fa; border: 1px solid #dee2e6; margin-bottom: 10px;">
-                <div style="display: flex; gap: 15px; align-items: flex-end; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 150px;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data
-                            Início:</label>
-                        <input type="date" id="filtro-inicio" style="margin-bottom: 0;">
-                    </div>
+        <div class="card border-top-info mt-4">
+            <div class="filter-bar">
+                <label>Data Início:</label>
+                <input type="date" id="filtro-inicio">
 
-                    <div style="flex: 1; min-width: 150px;">
-                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Data
-                            Fim:</label>
-                        <input type="date" id="filtro-fim" style="margin-bottom: 0;">
-                    </div>
+                <label>Data Fim:</label>
+                <input type="date" id="filtro-fim">
 
-                    <div style="display: flex; gap: 10px;">
-                        <button type="button" onclick="aplicarFiltros()"
-                            style="background: #17a2b8; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            Filtrar
-                        </button>
-                        <button type="button" onclick="limparFiltros()"
-                            style="background: #6c757d; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            Limpar
-                        </button>
-                        <button type="button" onclick="exportarExcel()"
-                            style="background: #28a745; height: 40px; padding: 0 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-                            Exportar Excel
-                        </button>
-                    </div>
-                </div>
+                <button type="button" onclick="aplicarFiltros()" class="btn-info">
+                    Filtrar
+                </button>
+                <button type="button" onclick="limparFiltros()" class="btn-secondary">
+                    Limpar
+                </button>
+                <button type="button" onclick="exportarExcel()" class="btn-success">
+                    Exportar Excel
+                </button>
             </div>
             <h3>📜 Histórico de Vendas Realizadas</h3>
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="default-table">
                     <thead>
-                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                            <th style="padding: 10px; text-align: left;">ID</th>
-                            <th style="text-align: left;">Data</th>
-                            <th style="text-align: left;">Cliente</th>
-                            <th style="text-align: left;">Total</th>
-                            <th style="text-align: left;">Forma PGTO</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: center;">Ação</th>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Forma PGTO</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Ação</th>
                         </tr>
                     </thead>
                     <tbody id="lista-historico-vendas"></tbody>
@@ -426,34 +403,30 @@
     </div> <!-- Fim Aba Histórico -->
 
     <div id="aba-financeiro" class="tab-content">
-        <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+        <div class="card border-top-success mt-4">
             <h3>💰 Gestão Financeira (Contas a Pagar e Receber)</h3>
 
-            <div class="responsive-grid" style="margin-bottom: 20px;">
-                <div style="background: #e8f5e9; padding: 15px; border-radius: 8px;">
-                    <h4 style="margin-top: 0; color: #28a745;">Total a Receber</h4>
-                    <h2 id="fin-total-receber" style="margin: 0; color: #28a745;">R$ 0,00</h2>
+            <div class="responsive-grid mb-4">
+                <div class="bg-pastel-success">
+                    <h4 class="text-success">Total a Receber</h4>
+                    <h2 id="fin-total-receber" class="text-success d-inline-block m-0">R$ 0,00</h2>
                 </div>
-                <div style="background: #f8dbdf; padding: 15px; border-radius: 8px;">
-                    <h4 style="margin-top: 0; color: #dc3545;">Total a Pagar</h4>
-                    <h2 id="fin-total-pagar" style="margin: 0; color: #dc3545;">R$ 0,00</h2>
+                <div class="bg-pastel-danger">
+                    <h4 class="text-danger">Total a Pagar</h4>
+                    <h2 id="fin-total-pagar" class="text-danger d-inline-block m-0">R$ 0,00</h2>
                 </div>
             </div>
 
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
-                <button onclick="abrirModalFinanceiro('Receita')" style="background: #28a745; width: fit-content;">+
-                    Nova
-                    Receita</button>
-                <button onclick="abrirModalFinanceiro('Despesa')" style="background: #dc3545; width: fit-content;">+
-                    Nova
-                    Despesa</button>
+                <button onclick="abrirModalFinanceiro('Receita')" class="btn-success btn-auto">+ Nova Receita</button>
+                <button onclick="abrirModalFinanceiro('Despesa')" class="btn-danger btn-auto">+ Nova Despesa</button>
             </div>
 
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="default-table">
                     <thead>
-                        <tr style="background: #f4f4f4; text-align: left;">
-                            <th style="padding: 10px;">Vencimento</th>
+                        <tr>
+                            <th>Vencimento</th>
                             <th>Descrição</th>
                             <th>Origem</th>
                             <th>Tipo</th>
@@ -467,10 +440,10 @@
             </div>
 
             <div id="modal-financeiro" class="modal-overlay">
-                <div class="modal-content" style="border-top: 5px solid #007bff;" id="modal-financeiro-border">
+                <div class="modal-content border-top-primary" id="modal-financeiro-border">
                     <h3 id="modal-financeiro-titulo">➕ Novo Lançamento</h3>
                     <input type="hidden" id="fin-tipo">
-                    <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                    <div class="flex-column-gap">
                         <input type="text" id="fin-descricao" placeholder="Descrição (Ex: Conta de Luz, Venda Avulsa)">
                         <input type="number" step="0.01" id="fin-valor" placeholder="Valor (R$)">
                         <input type="date" id="fin-vencimento">
@@ -479,11 +452,11 @@
                             <option value="Pago">Pago/Recebido</option>
                         </select>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <div class="flex-btn-group">
                         <button onclick="salvarLancamentoFinanceiro()" id="btn-salvar-fin"
-                            style="background: #007bff; width: 48%;">Salvar</button>
+                            class="btn-primary flex-fill-btn">Salvar</button>
                         <button onclick="document.getElementById('modal-financeiro').style.display='none'"
-                            style="background: #6c757d; width: 48%;">Cancelar</button>
+                            class="btn-secondary flex-fill-btn">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -491,7 +464,7 @@
     </div> <!-- Fim Aba Financeiro -->
 
     <div id="aba-fornecedores" class="tab-content">
-        <div class="card" style="margin-top: 20px; border-top: 3px solid #ff7f50;">
+        <div class="card border-top-coral mt-4">
             <h3>🏢 Cadastrar Novo Fornecedor</h3>
             <div class="responsive-grid">
                 <input type="text" id="forn-razao" placeholder="Razão Social">
@@ -499,19 +472,18 @@
                 <input type="text" id="forn-contato" placeholder="Nome do Contato">
                 <input type="text" id="forn-telefone" placeholder="Telefone / WhatsApp">
             </div>
-            <button onclick="salvarFornecedor()"
-                style="display: block; background: #ff7f50; width: fit-content; margin: 10px auto 0;">
+            <button onclick="salvarFornecedor()" class="btn-coral btn-auto my-custom">
                 Registrar Fornecedor
             </button>
         </div>
 
-        <div class="card" style="margin-top: 20px; border-top: 3px solid #6c757d;">
+        <div class="card border-top-gray mt-4">
             <h3>📋 Lista de Fornecedores</h3>
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="default-table">
                     <thead>
-                        <tr style="background: #f4f4f4; text-align: left;">
-                            <th style="padding: 10px;">ID</th>
+                        <tr>
+                            <th>ID</th>
                             <th>Razão Social</th>
                             <th>CNPJ</th>
                             <th>Contato</th>
@@ -523,10 +495,9 @@
                 </table>
             </div>
 
-            <div class="card" style="margin-top: 20px; border-top: 3px solid #28a745;">
+            <div class="card border-top-success mt-4">
                 <h3>📦 Registrar Entrada de Estoque (Pedido de Compra)</h3>
-                <p>O produto escolhido terá a sua quantidade somada no estoque atual e deduzida do
-                    dinheiro da
+                <p>O produto escolhido terá a sua quantidade somada no estoque atual e deduzida do dinheiro da
                     InovaClean financeiramente.</p>
                 <div class="responsive-grid">
                     <div>
@@ -546,14 +517,14 @@
                         <input type="number" step="0.01" id="ped-custo" placeholder="Ex: 12.50">
                     </div>
                 </div>
-                <button onclick="registrarPedidoCompra()"
-                    style="display: block; background: #28a745; width: fit-content; margin: 15px auto 0;">Confirmar
-                    Entrada e Atualizar
-                    Estoque</button>
+                <button onclick="registrarPedidoCompra()" class="btn-success btn-auto mt-3 mx-auto"
+                    style="margin-left:auto; margin-right:auto;">
+                    Confirmar Entrada e Atualizar Estoque
+                </button>
             </div>
 
             <div id="modal-edicao-fornecedor" class="modal-overlay">
-                <div class="modal-content" style="border-top: 5px solid #ff7f50;">
+                <div class="modal-content border-top-coral">
                     <h3>✏️ Editando Fornecedor</h3>
                     <input type="hidden" id="edit-forn-id">
                     <div class="responsive-grid">
@@ -562,29 +533,27 @@
                         <input type="text" id="edit-forn-contato" placeholder="Nome do Contato">
                         <input type="text" id="edit-forn-telefone" placeholder="Telefone">
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                        <button onclick="confirmarEdicaoFornecedor()" style="background: #ff7f50; width: 48%;">Salvar
+                    <div class="flex-btn-group">
+                        <button onclick="confirmarEdicaoFornecedor()" class="btn-coral flex-fill-btn">Salvar
                             Alterações</button>
                         <button onclick="document.getElementById('modal-edicao-fornecedor').style.display='none'"
-                            style="background: #6c757d; width: 48%;">Cancelar</button>
+                            class="btn-secondary flex-fill-btn">Cancelar</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div> <!-- Fim Aba Fornecedores -->
 
     <div id="aba-equipe" class="tab-content">
-        <div class="card" id="admin-panel" style="margin-top: 20px; border-top: 3px solid #dc3545;">
+        <div class="card border-top-danger mt-4" id="admin-panel">
             <h3>🛡️ Gerenciar Equipe (Apenas Admin)</h3>
             <p>Altere cargos, remova ou adicione funcionários ao sistema.</p>
 
-
             <div class="table-responsive">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="default-table">
                     <thead>
-                        <tr style="background: #f4f4f4; text-align: left;">
-                            <th style="padding: 10px;">ID</th>
+                        <tr>
+                            <th>ID</th>
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Cargo</th>
@@ -595,27 +564,26 @@
                 </table>
             </div>
 
-            <button onclick="toggleFormNovoUsuario()"
-                style="display: block; width: fit-content; margin: 20px auto 0; background: #28a745;">
+            <button onclick="toggleFormNovoUsuario()" class="btn-success btn-auto mt-4 mx-auto">
                 ➕ Adicionar Novo Membro
             </button>
 
-            <div id="form-novo-usuario"
-                style="display: none; background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-top: 20px;">
+            <div id="form-novo-usuario" class="card border-top-primary mt-4 d-none">
                 <h4>Dados do Novo Membro</h4>
                 <div class="responsive-grid-4">
-                    <input type="text" id="novo-user-nome" placeholder="Nome">
-                    <input type="email" id="novo-user-email" placeholder="E-mail">
-                    <input type="password" id="novo-user-senha" placeholder="Senha">
+                    <input type="text" id="novo-user-nome" placeholder="Nome Completo">
+                    <input type="email" id="novo-user-email" placeholder="E-mail de Acesso">
+                    <input type="password" id="novo-user-senha" placeholder="Senha Forte">
                     <select id="novo-user-cargo">
                         <option value="vendedor">Vendedor</option>
                         <option value="admin">Administrador</option>
                     </select>
                 </div>
-                <button onclick="cadastrarMembroEquipe()"
-                    style="display: block; width: fit-content; margin: 10px auto 0; background: #007bff;">
-                    Confirmar e Adicionar Usuário
-                </button>
+                <div class="flex-btn-group">
+                    <button onclick="cadastrarMembroEquipe()" class="btn-primary flex-fill-btn">Confirmar e Adicionar
+                        Usuário</button>
+                    <button onclick="toggleFormNovoUsuario()" class="btn-secondary flex-fill-btn">Cancelar</button>
+                </div>
             </div>
         </div>
     </div> <!-- Fim Aba Equipe -->
