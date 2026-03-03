@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const { verificarJWT } = require('../middleware/auth');
+const { validaIdParam } = require('../middleware/inputValidator');
+
+router.param('id', validaIdParam);
 
 // Listar todos os fornecedores (GET /api/fornecedores)
 router.get('/', verificarJWT, async (req, res) => {

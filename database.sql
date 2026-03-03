@@ -7,9 +7,6 @@ CREATE TABLE usuarios (
     cargo VARCHAR(50) DEFAULT 'Vendedor'
 );
 
--- Inserindo o Usuário Padrão Vercel: admin@inovaclean.com / Senha: 123456
-INSERT INTO usuarios (nome, email, senha, cargo) 
-VALUES ('Administrador', 'admin@inovaclean.com', '$2b$10$FVvXqtrQSra/VUrCMzay2e4hbvbsjii2tzPn.ug3.xnjxPPJCwx3Hi', 'Admin');
 
 -- 1. Categorias de Produtos (Ex: Hospitalar, Escolar, Escritório)
 CREATE TABLE categorias (
@@ -61,8 +58,6 @@ CREATE TABLE movimentacoes_estoque (
     data_movimentacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO categorias (nome, descricao) 
-VALUES ('Hospitalar', 'Produtos de desinfecção para clínicas e hospitais');
 
 -- 6.Cabeçalho da Venda
 CREATE TABLE vendas (

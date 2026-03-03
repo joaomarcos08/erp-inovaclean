@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const { verificarJWT, verificarAdmin } = require('../middleware/auth');
+const { validaIdParam } = require('../middleware/inputValidator');
+
+router.param('id', validaIdParam);
 
 // Listar todos os usuários (GET /api/usuarios) - Apenas Admin
 router.get('/', verificarJWT, verificarAdmin, async (req, res) => {

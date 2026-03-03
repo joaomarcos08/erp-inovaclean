@@ -3,6 +3,7 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet'); // <--- Proteção de cabeçalhos (XSS e Sniffing)
 const { apiLimiter } = require('./middleware/rateLimiter'); // <--- Prevenção anti-DDOS 
+const xssSanitizer = require('./middleware/xssSanitizer'); // <--- Prevenção ativa de payloads XSS
 require('dotenv').config();
 
 const app = express();
@@ -29,6 +30,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(xssSanitizer); // Sanitize ALL incoming payload (body, query, params)
 app.use(express.static(path.join(__dirname, 'public'))); // Garante localização do frontend
 
 // Importação das Rotas

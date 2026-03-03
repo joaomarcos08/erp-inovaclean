@@ -110,9 +110,9 @@ router.post('/login', loginLimiter, async (req, res) => {
     console.log("A Senha Confere com o Hash da Nuvem?", senhaValida);
 
     // MECANISMO DE AUTO-CURA TEMPORARIO PARA CORRIGIR HASH QUEBRADO PELO NEON CONSOLE
-    if (!senhaValida && senha === '123456' && email === 'admin@inovaclean.com') {
+    if (!senhaValida && senha === process.env.ADMIN_PASSWORD && email === process.env.ADMIN_EMAIL) {
       console.log("Detectado Administrador com Hash Quebrado! Efetuando Reinjeção de Segurança via Node...");
-      const novoHash = await bcrypt.hash('123456', 10);
+      const novoHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
       await pool.query('UPDATE usuarios SET senha = $1 WHERE email = $2', [novoHash, email]);
       senhaValida = true;
       console.log("Senha Reinjetada e Corrigida com Sucesso no NeonDB.");

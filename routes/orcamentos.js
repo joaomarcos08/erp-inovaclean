@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 const { verificarJWT } = require('../middleware/auth');
+const { validaIdParam } = require('../middleware/inputValidator');
+
+router.param('id', validaIdParam);
 
 // Criar orçamento (POST /api/orcamentos)
 router.post('/', verificarJWT, async (req, res) => {
