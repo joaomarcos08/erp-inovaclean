@@ -54,9 +54,11 @@ window.fazerLogin = async function () {
         const cargoNormalizado = data.usuario.cargo ? data.usuario.cargo.toLowerCase() : '';
         if (cargoNormalizado === 'admin' || cargoNormalizado === 'administrador') {
             document.getElementById('btn-tab-equipe').style.display = 'inline-block';
+            document.getElementById('btn-tab-dre').style.display = 'inline-block';
             carregarUsuarios();
         } else {
             document.getElementById('btn-tab-equipe').style.display = 'none';
+            document.getElementById('btn-tab-dre').style.display = 'none';
         }
 
         window.alternarAba('dashboard');
@@ -107,9 +109,11 @@ window.initApp = async function () {
             const cargoNormalizado = usuario.cargo ? usuario.cargo.toLowerCase() : '';
             if (cargoNormalizado === 'admin' || cargoNormalizado === 'administrador') {
                 document.getElementById('btn-tab-equipe').style.display = 'inline-block';
+                document.getElementById('btn-tab-dre').style.display = 'inline-block';
                 carregarUsuarios();
             } else {
                 document.getElementById('btn-tab-equipe').style.display = 'none';
+                document.getElementById('btn-tab-dre').style.display = 'none';
             }
 
             window.alternarAba('dashboard');
@@ -145,6 +149,59 @@ window.alternarAba = function (nomeAba) {
         carregarDashboard();
     } else if (nomeAba === 'financeiro') {
         carregarFinanceiro();
+    } else if (nomeAba === 'dre') {
+        const dataAtual = new Date();
+        const mesAtual = (dataAtual.getMonth() + 1).toString();
+        const anoAtual = dataAtual.getFullYear().toString();
+
+        // Seta default pro mes atual se os inputs estiverem vazios no HTML
+        if (!document.getElementById('dre-mes').value) {
+            document.getElementById('dre-mes').value = mesAtual;
+        }
+        if (!document.getElementById('dre-ano').value) {
+            document.getElementById('dre-ano').value = anoAtual;
+        }
+
+        carregarDadosDRE();
+    }
+};
+
+// ============ DRE ============
+window.carregarDadosDRE = async function () {
+    const token = localStorage.getItem('token');
+    const mes = document.getElementById('dre-mes').value;
+    const ano = document.getElementById('dre-ano').value;
+
+    if (!mes || !ano) {
+        alert("Selecione o mês e o ano para gerar o DRE.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/relatorios/dre?mes=${mes}&ano=${ano}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            alert(data.error || data.message || "Erro ao buscar dados do DRE");
+            return;
+        }
+
+        const formatarReal = (valor) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
+        };
+
+        document.getElementById('dre-receita').innerText = formatarReal(data.receita_bruta);
+        document.getElementById('dre-cmv').innerText = formatarReal(data.cmv);
+        document.getElementById('dre-lucro-bruto').innerText = formatarReal(data.lucro_bruto);
+        document.getElementById('dre-despesas').innerText = formatarReal(data.despesas);
+        document.getElementById('dre-lucro-liquido').innerText = formatarReal(data.lucro_liquido);
+
+    } catch (err) {
+        console.error('Erro ao carregar DRE:', err);
+        alert('Erro ao carregar dados do DRE');
     }
 };
 
