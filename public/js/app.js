@@ -527,13 +527,24 @@ window.carregarProdutos = async function () {
 
         // Preenche select de produtos
         const selectProdutos = document.getElementById('select-produtos');
-        selectProdutos.innerHTML = '<option value="">-- Selecione um produto --</option>';
+        const selectPedProdutos = document.getElementById('ped-produto-id');
+
+        if (selectProdutos) selectProdutos.innerHTML = '<option value="">-- Selecione um produto --</option>';
+        if (selectPedProdutos) selectPedProdutos.innerHTML = '<option value="">-- Selecione o Produto --</option>';
 
         produtos.forEach(p => {
-            const option = document.createElement('option');
-            option.value = p.id;
-            option.textContent = `${p.nome} - R$ ${parseFloat(p.preco_venda).toFixed(2)}`;
-            selectProdutos.appendChild(option);
+            if (selectProdutos) {
+                const optionVenda = document.createElement('option');
+                optionVenda.value = p.id;
+                optionVenda.textContent = `${p.nome} - R$ ${parseFloat(p.preco_venda).toFixed(2)}`;
+                selectProdutos.appendChild(optionVenda);
+            }
+            if (selectPedProdutos) {
+                const optionCompra = document.createElement('option');
+                optionCompra.value = p.id;
+                optionCompra.textContent = `${p.nome} (Atual: ${p.estoque_atual || 0})`;
+                selectPedProdutos.appendChild(optionCompra);
+            }
         });
 
     } catch (err) {
