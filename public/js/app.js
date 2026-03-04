@@ -1473,7 +1473,10 @@ window.cadastrarMembroEquipe = async function () {
 
 window.carregarUsuarios = async function () {
     const token = localStorage.getItem('token');
-    if (!token || !window.usuarioLogado || window.usuarioLogado.cargo !== 'admin') return;
+    if (!token || !window.usuarioLogado) return;
+
+    const cargoAdmin = window.usuarioLogado.cargo ? window.usuarioLogado.cargo.toLowerCase() : '';
+    if (cargoAdmin !== 'admin' && cargoAdmin !== 'administrador') return;
 
     try {
         const response = await fetch(`${API_URL}/usuarios`, {
@@ -1487,6 +1490,9 @@ window.carregarUsuarios = async function () {
         if (data.success && data.usuarios) {
             data.usuarios.forEach(u => {
                 const isCurrent = u.id === window.usuarioLogado.id;
+                const userCargoNormalizado = u.cargo ? u.cargo.toLowerCase() : '';
+                const isAdminOption = userCargoNormalizado === 'admin' || userCargoNormalizado === 'administrador';
+
                 tbody.innerHTML += `
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 10px;">${u.id}</td>
@@ -1494,8 +1500,8 @@ window.carregarUsuarios = async function () {
                         <td>${u.email}</td>
                         <td>
                             <select onchange="atualizarCargo(${u.id}, this.value)" ${isCurrent ? 'disabled' : ''} style="padding: 5px; width: auto; margin:0; height: auto;">
-                                <option value="admin" ${u.cargo === 'admin' ? 'selected' : ''}>Admin</option>
-                                <option value="vendedor" ${u.cargo === 'vendedor' ? 'selected' : ''}>Vendedor</option>
+                                <option value="admin" ${isAdminOption ? 'selected' : ''}>Admin</option>
+                                <option value="vendedor" ${(!isAdminOption) ? 'selected' : ''}>Vendedor</option>
                             </select>
                         </td>
                         <td>
