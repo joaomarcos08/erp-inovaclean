@@ -1130,15 +1130,15 @@ window.atualizarCarrinho = function () {
 
     if (window.carrinho.length > 0) {
         lista.innerHTML += `<li style="font-weight:bold; padding: 10px;">Total: R$ ${total.toFixed(2)}</li>`;
-        if (btnFinalizar) btnFinalizar.style.display = 'block';
-        if (btnOrcamento) btnOrcamento.style.display = 'block';
+        if (btnFinalizar) btnFinalizar.classList.remove('d-none');
+        if (btnOrcamento) btnOrcamento.classList.remove('d-none');
         const fp = document.getElementById('forma-pagamento');
-        if (fp) fp.style.display = 'block';
+        if (fp) fp.classList.remove('d-none');
     } else {
-        if (btnFinalizar) btnFinalizar.style.display = 'none';
-        if (btnOrcamento) btnOrcamento.style.display = 'none';
+        if (btnFinalizar) btnFinalizar.classList.add('d-none');
+        if (btnOrcamento) btnOrcamento.classList.add('d-none');
         const fp = document.getElementById('forma-pagamento');
-        if (fp) fp.style.display = 'none';
+        if (fp) fp.classList.add('d-none');
     }
 };
 
