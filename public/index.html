@@ -214,152 +214,145 @@
                     <label for="cli-estado" style="display:none;">Estado</label>
                     <input type="text" id="cli-estado" value="MA" maxlength="2" placeholder="UF">
                 </div>
-                <button onclick="cadastrarCliente()" class="btn-success btn-auto my-custom">
-                    Salvar Cliente
                 </button>
             </div>
-            Salvar Cliente
-            </button>
-        </div>
+            <div class="card border-top-success mt-4">
+                <h3>👥 Lista de Clientes / Editar</h3>
+                <div class="table-responsive">
+                    <table class="default-table" id="tabela-clientes-edit">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome Fantasia</th>
+                                <th>CNPJ</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-clientes"></tbody>
+                    </table>
+                </div>
 
+                <div id="modal-edicao-cliente" class="modal-overlay">
+                    <div class="modal-content border-top-success">
+                        <h3>✏️ Editando Cliente: <span id="edit-cli-nome-titulo"></span></h3>
+                        <input type="hidden" id="edit-cli-id">
+                        <div class="responsive-grid">
+                            <label for="edit-cli-nome" style="display:none;">Nome Fantasia Edit</label>
+                            <input type="text" id="edit-cli-nome" placeholder="Nome Fantasia">
 
-        <div class="card border-top-success mt-4">
-            <h3>👥 Lista de Clientes / Editar</h3>
-            <div class="table-responsive">
-                <table class="default-table" id="tabela-clientes-edit">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome Fantasia</th>
-                            <th>CNPJ</th>
-                            <th>Tipo</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela-clientes"></tbody>
-                </table>
-            </div>
+                            <label for="edit-cli-cnpj" style="display:none;">CNPJ Edit</label>
+                            <input type="text" id="edit-cli-cnpj" placeholder="CNPJ">
 
-            <div id="modal-edicao-cliente" class="modal-overlay">
-                <div class="modal-content border-top-success">
-                    <h3>✏️ Editando Cliente: <span id="edit-cli-nome-titulo"></span></h3>
-                    <input type="hidden" id="edit-cli-id">
-                    <div class="responsive-grid">
-                        <label for="edit-cli-nome" style="display:none;">Nome Fantasia Edit</label>
-                        <input type="text" id="edit-cli-nome" placeholder="Nome Fantasia">
+                            <label for="edit-cli-tipo" style="display:none;">Tipo Edit</label>
+                            <select id="edit-cli-tipo">
+                                <option value="Hospital">Hospital</option>
+                                <option value="Escola">Escola</option>
+                                <option value="Empresa">Empresa</option>
+                                <option value="Outro">Outro</option>
+                            </select>
 
-                        <label for="edit-cli-cnpj" style="display:none;">CNPJ Edit</label>
-                        <input type="text" id="edit-cli-cnpj" placeholder="CNPJ">
+                            <label for="edit-cli-cidade" style="display:none;">Cidade Edit</label>
+                            <input type="text" id="edit-cli-cidade" placeholder="Cidade">
 
-                        <label for="edit-cli-tipo" style="display:none;">Tipo Edit</label>
-                        <select id="edit-cli-tipo">
-                            <option value="Hospital">Hospital</option>
-                            <option value="Escola">Escola</option>
-                            <option value="Empresa">Empresa</option>
-                            <option value="Outro">Outro</option>
-                        </select>
-
-                        <label for="edit-cli-cidade" style="display:none;">Cidade Edit</label>
-                        <input type="text" id="edit-cli-cidade" placeholder="Cidade">
-
-                        <label for="edit-cli-estado" style="display:none;">Estado Edit</label>
-                        <input type="text" id="edit-cli-estado" placeholder="UF" maxlength="2">
-                    </div>
-                    <div class="flex-btn-group">
-                        <button onclick="salvarEdicaoCliente()" class="btn-success flex-fill-btn">Salvar
-                            Alterações</button>
-                        <button onclick="document.getElementById('modal-edicao-cliente').style.display='none'"
-                            class="btn-secondary flex-fill-btn">Cancelar</button>
+                            <label for="edit-cli-estado" style="display:none;">Estado Edit</label>
+                            <input type="text" id="edit-cli-estado" placeholder="UF" maxlength="2">
+                        </div>
+                        <div class="flex-btn-group">
+                            <button onclick="salvarEdicaoCliente()" class="btn-success flex-fill-btn">Salvar
+                                Alterações</button>
+                            <button onclick="document.getElementById('modal-edicao-cliente').style.display='none'"
+                                class="btn-secondary flex-fill-btn">Cancelar</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- Fim aba clientes -->
+        </div> <!-- Fim aba clientes -->
 
-    <div id="aba-produtos" class="tab-content">
-        <div class="card border-top-purple mt-4">
-            <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
-            <div class="table-responsive">
-                <table class="default-table" id="tabela-produtos-edit">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Preço Venda</th>
-                            <th>Estoque Atual</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela-produtos"></tbody>
-                </table>
-            </div>
+        <div id="aba-produtos" class="tab-content">
+            <div class="card border-top-purple mt-4">
+                <h3>🛠️ Gerenciar Catálogo de Produtos</h3>
+                <div class="table-responsive">
+                    <table class="default-table" id="tabela-produtos-edit">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Preço Venda</th>
+                                <th>Estoque Atual</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-produtos"></tbody>
+                    </table>
+                </div>
 
-            <div id="modal-edicao" class="modal-overlay">
-                <div class="modal-content border-top-primary">
-                    <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
-                    <input type="hidden" id="edit-id">
-                    <div class="responsive-grid">
-                        <label for="edit-nome" style="display:none;">Editar Nome</label>
-                        <input type="text" id="edit-nome" placeholder="Nome">
+                <div id="modal-edicao" class="modal-overlay">
+                    <div class="modal-content border-top-primary">
+                        <h3>✏️ Editando: <span id="edit-nome-titulo"></span></h3>
+                        <input type="hidden" id="edit-id">
+                        <div class="responsive-grid">
+                            <label for="edit-nome" style="display:none;">Editar Nome</label>
+                            <input type="text" id="edit-nome" placeholder="Nome">
 
-                        <label for="edit-venda" style="display:none;">Editar Venda</label>
-                        <input type="number" id="edit-venda" step="0.01" placeholder="Preço Venda">
+                            <label for="edit-venda" style="display:none;">Editar Venda</label>
+                            <input type="number" id="edit-venda" step="0.01" placeholder="Preço Venda">
 
-                        <label for="edit-custo" style="display:none;">Editar Custo</label>
-                        <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
+                            <label for="edit-custo" style="display:none;">Editar Custo</label>
+                            <input type="number" id="edit-custo" step="0.01" placeholder="Preço Custo">
 
-                        <label for="edit-minimo" style="display:none;">Editar Mínimo</label>
-                        <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
-                    </div>
-                    <div class="flex-btn-group">
-                        <button onclick="salvarEdicao()" class="btn-primary flex-fill-btn">Salvar
-                            Alterações</button>
-                        <button onclick="document.getElementById('modal-edicao').style.display='none'"
-                            class="btn-secondary flex-fill-btn">Cancelar</button>
+                            <label for="edit-minimo" style="display:none;">Editar Mínimo</label>
+                            <input type="number" id="edit-minimo" placeholder="Estoque Mínimo">
+                        </div>
+                        <div class="flex-btn-group">
+                            <button onclick="salvarEdicao()" class="btn-primary flex-fill-btn">Salvar
+                                Alterações</button>
+                            <button onclick="document.getElementById('modal-edicao').style.display='none'"
+                                class="btn-secondary flex-fill-btn">Cancelar</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div> <!-- Fim Aba Produtos -->
+        </div> <!-- Fim Aba Produtos -->
 
-    <div id="aba-vendas" class="tab-content">
-        <div class="card border-top-info mt-4">
-            <h3>🛒 Registrar Nova Venda</h3>
+        <div id="aba-vendas" class="tab-content">
+            <div class="card border-top-info mt-4">
+                <h3>🛒 Registrar Nova Venda</h3>
 
-            <label for="select-clientes">Selecione o Cliente:</label>
-            <select id="select-clientes"></select>
+                <label for="select-clientes">Selecione o Cliente:</label>
+                <select id="select-clientes"></select>
 
-            <hr>
+                <hr>
 
-            <label for="select-produtos">Produto:</label>
-            <select id="select-produtos"></select>
+                <label for="select-produtos">Produto:</label>
+                <select id="select-produtos"></select>
 
-            <label for="qtd-venda">Quantidade:</label>
-            <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
+                <label for="qtd-venda">Quantidade:</label>
+                <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
 
-            <button onclick="adicionarAoCarrinho()" class="btn-info">Adicionar Item</button>
+                <button onclick="adicionarAoCarrinho()" class="btn-info">Adicionar Item</button>
 
-            <h4>Itens no Carrinho:</h4>
-            <ul id="carrinho-lista"></ul>
+                <h4>Itens no Carrinho:</h4>
+                <ul id="carrinho-lista"></ul>
 
-            <div class="flex-btn-group">
-                <label for="forma-pagamento" style="display:none;">Forma de Pagamento</label>
-                <select id="forma-pagamento" class="flex-fill-btn d-none">
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="PIX">PIX</option>
-                    <option value="Cartão de Crédito">Cartão de Crédito</option>
-                    <option value="Cartão de Débito">Cartão de Débito</option>
-                    <option value="Boleto">Boleto (A Prazo)</option>
-                </select>
-                <button onclick="finalizarVenda()" id="btn-finalizar" class="btn-success flex-fill-btn d-none">
-                    Confirmar Venda
-                </button>
-                <button onclick="salvarOrcamento()" id="btn-orcamento" class="btn-warning flex-fill-btn d-none">
-                    Salvar Orçamento
-                </button>
+                <div class="flex-btn-group">
+                    <label for="forma-pagamento" style="display:none;">Forma de Pagamento</label>
+                    <select id="forma-pagamento" class="flex-fill-btn d-none">
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="PIX">PIX</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Boleto">Boleto (A Prazo)</option>
+                    </select>
+                    <button onclick="finalizarVenda()" id="btn-finalizar" class="btn-success flex-fill-btn d-none">
+                        Confirmar Venda
+                    </button>
+                    <button onclick="salvarOrcamento()" id="btn-orcamento" class="btn-warning flex-fill-btn d-none">
+                        Salvar Orçamento
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
     </div> <!-- Fim Aba Vendas -->
 
     <div id="aba-orcamentos" class="tab-content">
