@@ -346,76 +346,74 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="card border-top-success mt-4">
-        <h3>📦 Registrar Entrada de Estoque (Pedido de Compra)</h3>
-        <p>O produto escolhido terá a sua quantidade somada no estoque atual e deduzida do dinheiro da
-            InovaClean financeiramente.</p>
-        <div class="responsive-grid">
-            <div>
-                <label for="ped-fornecedor-id">Fornecedor de Origem:</label>
-                <select id="ped-fornecedor-id"></select>
-            </div>
-            <div>
-                <label for="ped-produto-id">Produto Recebido:</label>
-                <select id="ped-produto-id"></select>
-            </div>
-            <div>
-                <label for="ped-quantidade">Quantidade Recebida:</label>
-                <input type="number" id="ped-quantidade" placeholder="Ex: 50" min="1">
-            </div>
-            <div>
-                <label for="ped-custo">Preço de Custo (Unitário) Pago R$:</label>
-                <input type="number" step="0.01" id="ped-custo" placeholder="Ex: 12.50">
-            </div>
-        </div>
-        <button onclick="registrarPedidoCompra()" class="btn-success btn-auto mt-3 mx-auto"
-            style="margin-left:auto; margin-right:auto;">
-            Confirmar Entrada e Atualizar Estoque
-        </button>
-    </div>
-    </div> <!-- Fim Aba Produtos -->
-
-    <div id="aba-vendas" class="tab-content">
-        <div class="card border-top-info mt-4">
-            <h3>🛒 Registrar Nova Venda</h3>
-
-            <label for="select-clientes">Selecione o Cliente:</label>
-            <select id="select-clientes"></select>
-
-            <hr>
-
-            <label for="select-produtos">Produto:</label>
-            <select id="select-produtos"></select>
-
-            <label for="qtd-venda">Quantidade:</label>
-            <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
-
-            <button onclick="adicionarAoCarrinho()" class="btn-info">Adicionar Item</button>
-
-            <h4>Itens no Carrinho:</h4>
-            <ul id="carrinho-lista"></ul>
-
-            <div class="flex-btn-group">
-                <label for="forma-pagamento" style="display:none;">Forma de Pagamento</label>
-                <select id="forma-pagamento" class="flex-fill-btn d-none">
-                    <option value="Dinheiro">Dinheiro</option>
-                    <option value="PIX">PIX</option>
-                    <option value="Cartão de Crédito">Cartão de Crédito</option>
-                    <option value="Cartão de Débito">Cartão de Débito</option>
-                    <option value="Boleto">Boleto (A Prazo)</option>
-                </select>
-                <button onclick="finalizarVenda()" id="btn-finalizar" class="btn-success flex-fill-btn d-none">
-                    Confirmar Venda
-                </button>
-                <button onclick="salvarOrcamento()" id="btn-orcamento" class="btn-warning flex-fill-btn d-none">
-                    Salvar Orçamento
+            <div class="card border-top-success mt-4">
+                <h3>📦 Registrar Entrada de Estoque (Pedido de Compra)</h3>
+                <p>O produto escolhido terá a sua quantidade somada no estoque atual e deduzida do dinheiro da
+                    InovaClean financeiramente.</p>
+                <div class="responsive-grid">
+                    <div>
+                        <label for="ped-fornecedor-id">Fornecedor de Origem:</label>
+                        <select id="ped-fornecedor-id"></select>
+                    </div>
+                    <div>
+                        <label for="ped-produto-id">Produto Recebido:</label>
+                        <select id="ped-produto-id"></select>
+                    </div>
+                    <div>
+                        <label for="ped-quantidade">Quantidade Recebida:</label>
+                        <input type="number" id="ped-quantidade" placeholder="Ex: 50" min="1">
+                    </div>
+                    <div>
+                        <label for="ped-custo">Preço de Custo (Unitário) Pago R$:</label>
+                        <input type="number" step="0.01" id="ped-custo" placeholder="Ex: 12.50">
+                    </div>
+                </div>
+                <button onclick="registrarPedidoCompra()" class="btn-success btn-auto mt-3 mx-auto"
+                    style="margin-left:auto; margin-right:auto;">
+                    Confirmar Entrada e Atualizar Estoque
                 </button>
             </div>
+        </div> <!-- Fim Aba Produtos -->
+
+        <div id="aba-vendas" class="tab-content">
+            <div class="card border-top-info mt-4">
+                <h3>🛒 Registrar Nova Venda</h3>
+
+                <label for="select-clientes">Selecione o Cliente:</label>
+                <select id="select-clientes"></select>
+
+                <hr>
+
+                <label for="select-produtos">Produto:</label>
+                <select id="select-produtos"></select>
+
+                <label for="qtd-venda">Quantidade:</label>
+                <input type="number" id="qtd-venda" value="1" min="1" style="width: 80px;">
+
+                <button onclick="adicionarAoCarrinho()" class="btn-info">Adicionar Item</button>
+
+                <h4>Itens no Carrinho:</h4>
+                <ul id="carrinho-lista"></ul>
+
+                <div class="flex-btn-group">
+                    <label for="forma-pagamento" style="display:none;">Forma de Pagamento</label>
+                    <select id="forma-pagamento" class="flex-fill-btn d-none">
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="PIX">PIX</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Boleto">Boleto (A Prazo)</option>
+                    </select>
+                    <button onclick="finalizarVenda()" id="btn-finalizar" class="btn-success flex-fill-btn d-none">
+                        Confirmar Venda
+                    </button>
+                    <button onclick="salvarOrcamento()" id="btn-orcamento" class="btn-warning flex-fill-btn d-none">
+                        Salvar Orçamento
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
     </div> <!-- Fim Aba Vendas -->
 
     <div id="aba-orcamentos" class="tab-content">
