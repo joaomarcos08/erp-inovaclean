@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,8 +20,14 @@
         <div class="login-right">
             <div class="login-form-container">
                 <h3>Acesse sua Conta</h3>
-                <input type="email" id="email" placeholder="E-mail" onkeydown="handleLoginEnter(event)">
-                <input type="password" id="senha" placeholder="Senha" onkeydown="handleLoginEnter(event)">
+                <label for="email" style="display:none;">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="E-mail" autocomplete="username"
+                    onkeydown="handleLoginEnter(event)">
+
+                <label for="senha" style="display:none;">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="Senha" autocomplete="current-password"
+                    onkeydown="handleLoginEnter(event)">
+
                 <button onclick="fazerLogin()">Entrar no Sistema</button>
                 <div class="login-footer">
                     &copy; 2026 InovaClean ERP. Todos os direitos reservados.
