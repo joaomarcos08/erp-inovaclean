@@ -351,7 +351,12 @@ async function carregarHistorico(inicio = window.filtroDataInicio, fim = window.
         headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await response.json();
-    const vendas = data.vendas || data || [];
+    let vendas = [];
+    if (data.success && Array.isArray(data.vendas)) {
+        vendas = data.vendas;
+    } else if (Array.isArray(data)) {
+        vendas = data;
+    }
 
     const corpo = document.getElementById('lista-historico-vendas');
     corpo.innerHTML = '';
