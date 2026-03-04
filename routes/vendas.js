@@ -82,7 +82,7 @@ router.get('/historico', verificarJWT, async (req, res) => {
 
     try {
         let query = `
-            SELECT v.id, v.data_venda, v.valor_total, v.status, v.forma_pagamento, c.nome_fantasia as cliente
+            SELECT v.id, v.data_venda, v.valor_total, c.nome_fantasia as cliente
             FROM vendas v
             JOIN clientes c ON v.cliente_id = c.id
         `;
