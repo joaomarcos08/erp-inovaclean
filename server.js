@@ -45,6 +45,7 @@ const usuarioRoutes = require('./routes/usuarios');
 const financeiroRoutes = require('./routes/financeiro');
 const orcamentoRoutes = require('./routes/orcamentos');
 const fornecedoresRoutes = require('./routes/fornecedores');
+const siteRoutes = require('./routes/site'); // <--- Nova API do site público
 
 // Uso das Rotas (Prefixos)
 app.use('/api/auth', authRoutes);
@@ -57,11 +58,22 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/financeiro', financeiroRoutes);
 app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api/fornecedores', fornecedoresRoutes);
+app.use('/api/site', siteRoutes); // <--- Registro da nova rota pública
 
 // ROTA CURINGA (CATCH-ALL) DO FRONTEND
-// Para a nuvem Vercel sempre achar o index.html na raiz (Cannot GET /)
-app.get('*', (req, res) => {
+// Para acessar o painel administrativo internamente (ERP)
+app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// A Rota raiz agora serve a Landing Page Corporativa (site.html)
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'site.html'));
+});
+
+// Fallback geral para o site público caso tentem rotas erradas
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'site.html'));
 });
 
 // Middleware de erro global

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InovaClean - Distribuidora de Produtos de Limpeza em Bacabal/MA</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/site.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <i class="ph-fill ph-drop" style="color: #0d6efd; font-size: 28px;"></i>
+                <h1>Inova<span>Clean</span></h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#catalogo">Catálogo</a></li>
+                <li><a href="#contato">Seja Cliente</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button onclick="abrirModalB2B()" class="btn-outline-primary">
+                    <i class="ph ph-user"></i> Portal B2B
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="inicio" class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h2>A sua parceira em <span class="highlight">Higiene e Limpeza</span> Corporativa.</h2>
+                <p>Distribuidora líder em Bacabal/MA. Soluções profissionais em grandes volumes para Hospitais, Escolas,
+                    Condomínios e Empresas Gerais.</p>
+                <div class="hero-buttons">
+                    <a href="#catalogo" class="btn-primary-large">Ver Produtos</a>
+                    <a href="#contato" class="btn-secondary-large">Solicitar Cotação em Lote</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Imagem ilustrativa ou placeholder bonito -->
+                <div class="hero-illustration">
+                    <i class="ph-duotone ph-buildings" style="font-size: 15rem; color: rgba(255,255,255,0.8);"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CATÁLOGO DINÂMICO -->
+    <section id="catalogo" class="catalog-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Nosso Catálogo</h2>
+                <p>Navegue pelos nossos produtos e solicite o seu orçamento direto no WhatsApp.</p>
+            </div>
+
+            <!-- FILTROS (MOCK para o front) -->
+            <div class="catalog-filters">
+                <button class="filter-btn active" data-filter="todos">Todos</button>
+                <button class="filter-btn" data-filter="hospitalar">Linha Hospitalar</button>
+                <button class="filter-btn" data-filter="escolar">Linha Escolar</button>
+                <button class="filter-btn" data-filter="geral">Uso Geral</button>
+            </div>
+
+            <!-- GRID DE PRODUTOS (Populada pelo JS) -->
+            <div class="catalog-grid" id="produtos-vitrine">
+                <!-- Os produtos entrarão aqui via javascript -->
+                <div class="loading-state">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 32px; color: #0d6efd;"></i>
+                    <p>Carregando o catálogo mais limpo de Bacabal...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / CONTATO LEAD -->
+    <section id="contato" class="contact-section">
+        <div class="container contact-container">
+            <div class="contact-info">
+                <h2>Torne-se um parceiro InovaClean.</h2>
+                <p>Tem uma empresa e precisa de fornecimento recorrente? Cadastre-se como prospect e nossa equipe
+                    comercial entrará em contato.</p>
+
+                <ul class="contact-list">
+                    <li><i class="ph-fill ph-map-pin"></i> Atendimento exclusivo em Bacabal e Região (MA)</li>
+                    <li><i class="ph-fill ph-truck"></i> Logística rápida para clientes conveniados</li>
+                    <li><i class="ph-fill ph-whatsapp-logo"></i> Suporte humanizado via WhatsApp</li>
+                </ul>
+            </div>
+            <div class="contact-form-box">
+                <h3>Solicitar Atendimento B2B</h3>
+                <form id="form-lead" onsubmit="enviarLead(event)">
+                    <div class="input-group">
+                        <label for="lead-nome">Nome Fantasia / Empresa</label>
+                        <input type="text" id="lead-nome" required placeholder="Sua Empresa LTDA">
+                    </div>
+                    <div class="input-group">
+                        <label for="lead-cnpj">CNPJ</label>
+                        <input type="text" id="lead-cnpj" required placeholder="00.000.000/0001-00">
+                    </div>
+                    <div class="input-group">
+                        <label for="lead-telefone">WhatsApp para Contato</label>
+                        <input type="text" id="lead-telefone" required placeholder="(99) 90000-0000">
+                    </div>
+                    <button type="submit" class="btn-primary-large" style="width: 100%; margin-top: 10px;">Enviar
+                        Solicitação</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>&copy; 2024 InovaClean Distribuidora. Todos os direitos reservados.</p>
+            <p class="small-text">B2B ERP System by Bacabal Intelligence</p>
+        </div>
+    </footer>
+
+    <!-- MODAL DO PORTAL B2B -->
+    <div id="modal-b2b" class="modal-overlay">
+        <div class="modal-content b2b-modal">
+            <div class="modal-header">
+                <h3><i class="ph ph-lock-key"></i> Acesso Restrito a Clientes</h3>
+                <button onclick="fecharModalB2B()" class="close-btn"><i class="ph ph-x"></i></button>
+            </div>
+
+            <!-- TELA DE LOGIN B2B -->
+            <div id="b2b-login-area">
+                <p class="modal-desc">Digite o CNPJ cadastrado para acessar seu histórico de faturas e pedidos.</p>
+                <div class="input-group">
+                    <label for="b2b-cnpj">CNPJ de Acesso</label>
+                    <input type="text" id="b2b-cnpj" placeholder="Apenas números ou formatado">
+                </div>
+                <button onclick="fazerLoginB2B()" class="btn-primary-large" style="width: 100%;">Acessar
+                    Histórico</button>
+            </div>
+
+            <!-- TELA DO DASHBOARD B2B (Mesa do Cliente) -->
+            <div id="b2b-dashboard-area" style="display: none;">
+                <div class="b2b-user-bar">
+                    <span id="b2b-nome-cliente" style="font-weight: 600;">Bem-vindo, Cliente</span>
+                    <button onclick="sairB2B()" class="btn-text-danger">Sair</button>
+                </div>
+
+                <h4 class="mt-4">Seus Últimos Pedidos Faturados</h4>
+                <div class="table-responsive">
+                    <table class="b2b-table">
+                        <thead>
+                            <tr>
+                                <th>Nº Pedido</th>
+                                <th>Data da Compra</th>
+                                <th>Itens Detalhados</th>
+                                <th>Total da Fatura (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="b2b-lista-pedidos">
+                            <!-- Injetado por JS via /api/site/pedidos -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="/js/site.js"></script>
+</body>
+
+</html>
