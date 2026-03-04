@@ -32,7 +32,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xssSanitizer); // Sanitize ALL incoming payload (body, query, params)
-app.use(express.static(path.join(__dirname, 'public'))); // Garante localização do frontend
+app.use(express.static(path.join(__dirname, 'public'), { index: false })); // Impede que sirva index.html na raiz automaticamente
 
 // Importação das Rotas
 const authRoutes = require('./routes/auth');
