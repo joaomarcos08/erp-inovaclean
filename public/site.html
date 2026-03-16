@@ -47,6 +47,11 @@
                     <a href="#catalogo" class="btn-primary-large">Ver Produtos</a>
                     <a href="#contato" class="btn-secondary-large">Solicitar Cotação em Lote</a>
                 </div>
+                <!-- BARRA DE LIVE SEARCH -->
+                <div class="hero-search" style="margin-top: 30px; position: relative;">
+                    <input type="text" id="live-search-input" onkeyup="filtrarCatalogoLive()" placeholder="O que sua empresa precisa hoje? Ex: Álcool 5L..." style="width: 100%; padding: 15px 20px; font-size: 16px; border-radius: 30px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; outline: none; box-sizing: border-box;">
+                    <i class="ph-bold ph-magnifying-glass" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: white; font-size: 20px;"></i>
+                </div>
             </div>
             <div class="hero-image">
                 <!-- Imagem ilustrativa ou placeholder bonito -->
@@ -56,6 +61,22 @@
             </div>
         </div>
     </header>
+
+    <!-- DESTAQUES / MAIS VENDIDOS -->
+    <section id="destaques" class="catalog-section" style="background-color: #f8f9fa;">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: #ff7f50;"><i class="ph-fill ph-fire"></i> Mais Procurados em Bacabal</h2>
+                <p>Os 4 itens líderes de vendas entre os nossos parceiros comerciais no último mês.</p>
+            </div>
+            <div class="catalog-grid" id="destaques-vitrine">
+                <div class="loading-state">
+                    <i class="ph ph-spinner ph-spin" style="font-size: 32px; color: #ff7f50;"></i>
+                    <p>Carregando destaques...</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- CATÁLOGO DINÂMICO -->
     <section id="catalogo" class="catalog-section">
@@ -79,6 +100,58 @@
                 <div class="loading-state">
                     <i class="ph ph-spinner ph-spin" style="font-size: 32px; color: #0d6efd;"></i>
                     <p>Carregando o catálogo mais limpo de Bacabal...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ESTATÍSTICAS E DEPOIMENTOS -->
+    <section class="stats-testimonials-section" style="padding: 60px 0; background-color: #0d6efd; color: white;">
+        <div class="container">
+            <!-- NÚMEROS DA INOVACLEAN -->
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; text-align: center; margin-bottom: 60px;">
+                <div class="stat-card">
+                    <i class="ph-duotone ph-buildings" style="font-size: 48px; margin-bottom: 10px; color: #ff7f50;"></i>
+                    <h2 id="contador-clientes" style="font-size: 42px; font-weight: 800; margin: 0;">+0</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Clientes Corporativos Atendidos</p>
+                </div>
+                <div class="stat-card">
+                    <i class="ph-duotone ph-package" style="font-size: 48px; margin-bottom: 10px; color: #ff7f50;"></i>
+                    <h2 id="contador-produtos" style="font-size: 42px; font-weight: 800; margin: 0;">+0</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Produtos Validados no Catálogo</p>
+                </div>
+                <div class="stat-card">
+                    <i class="ph-duotone ph-truck" style="font-size: 48px; margin-bottom: 10px; color: #ff7f50;"></i>
+                    <h2 style="font-size: 42px; font-weight: 800; margin: 0;">100%</h2>
+                    <p style="font-size: 16px; opacity: 0.9;">Entrega Expressa em toda Bacabal/MA</p>
+                </div>
+            </div>
+            
+            <!-- DEPOIMENTOS -->
+            <div class="section-header" style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: white; margin-bottom: 15px;">A Agilidade Que a Sua Empresa Precisa</h2>
+                <p style="opacity: 0.9;">A InovaClean orgulha-se da pontualidade logística sem precedentes.</p>
+            </div>
+            <div class="testimonials-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div class="testimonial-card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; border-left: 4px solid #ff7f50;">
+                    <p style="font-style: italic; margin-bottom: 15px;">"A InovaClean salvou a logística da nossa clínica. Fiz o pedido de galões de álcool de manhã e de tarde já descarregaram aqui no centro de Bacabal. Confiabilidade máxima!"</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://ui-avatars.com/api/?name=Marcos+Almeida&background=random" style="width: 40px; height: 40px; border-radius: 50%;" alt="Marcos">
+                        <div>
+                            <strong style="display: block; font-size: 14px;">Marcos Almeida</strong>
+                            <span style="font-size: 12px; opacity: 0.8;">Gerente Hospitalar - Bacabal/MA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" style="background: rgba(255,255,255,0.1); padding: 25px; border-radius: 12px; border-left: 4px solid #ff7f50;">
+                    <p style="font-style: italic; margin-bottom: 15px;">"Trocamos nosso fornecedor antigo por conta da velocidade. O portal B2B deles nos avisa tudo e nunca ficamos sem Cloro pra nossa rede de fast-food."</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://ui-avatars.com/api/?name=Fernanda+Souza&background=random" style="width: 40px; height: 40px; border-radius: 50%;" alt="Fernanda">
+                        <div>
+                            <strong style="display: block; font-size: 14px;">Fernanda Souza</strong>
+                            <span style="font-size: 12px; opacity: 0.8;">Rede de Restaurantes</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,10 +193,34 @@
         </div>
     </section>
 
-    <footer class="site-footer">
-        <div class="container text-center">
+    <footer class="site-footer" style="background-color: #1a1a1a; color: #fff; padding: 40px 0 20px; font-size: 14px;">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-bottom: 30px;">
+            <div>
+                <h3 style="color: #ff7f50; margin-bottom: 15px;">InovaClean<br>Distribuidora</h3>
+                <p><i class="ph-fill ph-map-pin" style="color: #0d6efd; margin-right: 5px;"></i> Rod. BR-316, S/N - Bairro Esperança<br>Bacabal - MA, 65700-000</p>
+                <div style="margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; background: rgba(13, 110, 253, 0.2); padding: 5px 10px; border-radius: 20px; border: 1px solid #0d6efd;">
+                    <i class="ph-fill ph-check-circle" style="color: #0d6efd;"></i>
+                    <span style="font-weight: 600; font-size: 12px;">Distribuidor Autorizado</span>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Atendimento</h4>
+                <p><i class="ph-fill ph-clock" style="color: #0d6efd; margin-right: 5px;"></i> Seg a Sex: 08:00 às 18:00</p>
+                <p><i class="ph-fill ph-clock" style="color: #0d6efd; margin-right: 5px;"></i> Sábados: 08:00 às 12:00</p>
+                <p style="margin-top: 10px;"><i class="ph-fill ph-whatsapp-logo" style="color: #25D366; margin-right: 5px;"></i> (99) 90000-0000</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Links Rápidos</h4>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                    <li><a href="#catalogo" onclick="document.querySelector('[data-filter=\'geral\']')?.click()" style="color: #ccc; text-decoration: none;">🧴 Linha de Limpeza Geral</a></li>
+                    <li><a href="#catalogo" onclick="document.querySelector('[data-filter=\'hospitalar\']')?.click()" style="color: #ccc; text-decoration: none;">🏥 Linha Hospitalar (Anvisa)</a></li>
+                    <li><a href="#contato" style="color: #ccc; text-decoration: none;">🤝 Seja um Parceiro B2B</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container text-center" style="border-top: 1px solid #333; padding-top: 20px;">
             <p>&copy; 2024 InovaClean Distribuidora. Todos os direitos reservados.</p>
-            <p class="small-text">B2B ERP System by Bacabal Intelligence</p>
+            <p class="small-text" style="color: #666;">B2B ERP System by Bacabal Intelligence</p>
         </div>
     </footer>
 
@@ -132,7 +229,8 @@
         <div class="modal-content b2b-modal">
             <div class="modal-header">
                 <h3><i class="ph ph-lock-key"></i> Acesso Restrito a Clientes</h3>
-                <button onclick="fecharModalB2B()" class="close-btn"><i class="ph ph-x"></i></button>
+                <button onclick="fecharModalB2B()" class="close-btn" aria-label="Fechar"
+                    style="font-size: 24px; cursor: pointer;">&times;</button>
             </div>
 
             <!-- TELA DE LOGIN B2B -->

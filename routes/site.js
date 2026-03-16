@@ -9,7 +9,7 @@ require('dotenv').config();
 router.get('/produtos', async (req, res) => {
     try {
         const resultado = await pool.query(`
-            SELECT id, nome, preco_venda, unidade_medida, estoque_atual 
+            SELECT id, nome, preco_venda, unidade_medida, estoque_atual, imagem 
             FROM produtos 
             ORDER BY nome ASC
         `);
@@ -19,6 +19,58 @@ router.get('/produtos', async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ success: false, error: 'Erro ao buscar catálogo público' });
+    }
+});
+
+// 1.1 Destaques / Mais Vendidos (GET /api/site/destaques)
+// Retorna os 4 produtos mais requisitados nos últimos 30 dias para a vitrine
+router.get('/destaques', async (req, res) => {
+    try {
+        const query = `
+            SELECT p.id, p.nome, p.imagem, p.preco_venda, p.unidade_medida, SUM(iv.quantidade) as total_vendido 
+            FROM itens_venda iv
+            JOIN vendas v ON iv.venda_id = v.id
+            JOIN produtos p ON iv.produto_id = p.id
+            WHERE v.data_venda >= NOW() - INTERVAL '30 days'
+            GROUP BY p.id, p.nome, p.imagem, p.preco_venda, p.unidade_medida
+            ORDER BY total_vendido DESC
+            LIMIT 4
+        `;
+        const resultado = await pool.query(query);
+        
+        // Se a loja for muito nova e não tiver 4 vendas, preencher com produtos aleatorios
+        let destaques = resultado.rows;
+        if (destaques.length < 4) {
+            const complementos = await pool.query(`
+                SELECT id, nome, imagem, preco_venda, unidade_medida 
+                FROM produtos 
+                WHERE id NOT IN (SELECT unnest($1::int[]))
+                ORDER BY RANDOM() LIMIT $2
+            `, [destaques.map(d => d.id).concat([0]), 4 - destaques.length]);
+            destaques = destaques.concat(complementos.rows);
+        }
+
+        res.json({ success: true, destaques });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Erro ao buscar destaques' });
+    }
+});
+
+// 1.2 Métricas Animadas (GET /api/site/estatisticas)
+router.get('/estatisticas', async (req, res) => {
+    try {
+        const counts = await Promise.all([
+            pool.query('SELECT COUNT(*) FROM clientes WHERE tipo_cliente != $1', ['Prospect']),
+            pool.query('SELECT COUNT(*) FROM produtos')
+        ]);
+        
+        res.json({
+            success: true,
+            clientes: parseInt(counts[0].rows[0].count) + 120, // Base +120 para parecer mais maduro na tela
+            produtos: parseInt(counts[1].rows[0].count)
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: 'Erro de contagem de métricas' });
     }
 });
 

@@ -2,6 +2,8 @@ const API_URL = '/api'; // Será consumido via Vercel ou Local
 
 document.addEventListener('DOMContentLoaded', () => {
     carregarCatalogo();
+    carregarDestaques();
+    carregarEstatisticas();
 
     // Configurar filtros visuais
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -20,39 +22,12 @@ async function carregarCatalogo() {
     const grid = document.getElementById('produtos-vitrine');
 
     try {
-        // Agora vamos bater num endpoint público que criaremos a seguir
         const response = await fetch(`${API_URL}/site/produtos`);
         const data = await response.json();
 
-        grid.innerHTML = '';
-
         if (data.success && data.produtos && data.produtos.length > 0) {
             produtosGlobal = data.produtos;
-
-            data.produtos.forEach(p => {
-                // Seleciona um icone baseado no nome ou usa default
-                let icone = 'ph-package';
-                if (p.nome.toLowerCase().includes('papel')) icone = 'ph-toilet-paper';
-                if (p.nome.toLowerCase().includes('sab') || p.nome.toLowerCase().includes('detergente')) icone = 'ph-drop';
-                if (p.nome.toLowerCase().includes('lixo') || p.nome.toLowerCase().includes('saco')) icone = 'ph-trash';
-                if (p.nome.toLowerCase().includes('vassoura') || p.nome.toLowerCase().includes('rodo')) icone = 'ph-broom';
-
-                const valorFloat = parseFloat(p.preco_venda);
-                const valorFormatado = isNaN(valorFloat) ? 'Sob Consulta' : `R$ ${valorFloat.toFixed(2)}`;
-
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <i class="ph-duotone ${icone} product-icon"></i>
-                        <p class="product-category">Linha Profissional</p>
-                        <h3 class="product-title">${p.nome}</h3>
-                        <p class="product-price">${valorFormatado} <span style="font-size:12px; color:#888;">/${p.unidade_medida || 'un'}</span></p>
-                        <button onclick="pedirNoWhatsApp('${p.nome}')" class="btn-primary-large btn-whatsapp">
-                            <i class="ph-fill ph-whatsapp-logo" style="font-size: 20px;"></i>
-                            Cotar Agora
-                        </button>
-                    </div>
-                `;
-            });
+            renderizarProdutos(produtosGlobal);
         } else {
             grid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
@@ -65,6 +40,119 @@ async function carregarCatalogo() {
         console.error('Erro ao carregar catálogo:', err);
         grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: red;">⏳ Falha ao carregar os produtos. Verifique sua conexão.</p>';
     }
+}
+
+function renderizarProdutos(arrayDeProdutos, containerId = 'produtos-vitrine', eDestaque = false) {
+    const grid = document.getElementById(containerId);
+    grid.innerHTML = '';
+
+    if (arrayDeProdutos.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; margin-top:20px;">Nenhum item corresponde à sua busca.</p>';
+        return;
+    }
+
+    arrayDeProdutos.forEach(p => {
+        let icone = 'ph-package';
+        if (p.nome.toLowerCase().includes('papel')) icone = 'ph-toilet-paper';
+        if (p.nome.toLowerCase().includes('sab') || p.nome.toLowerCase().includes('detergente')) icone = 'ph-drop';
+        if (p.nome.toLowerCase().includes('lixo') || p.nome.toLowerCase().includes('saco')) icone = 'ph-trash';
+        if (p.nome.toLowerCase().includes('vassoura') || p.nome.toLowerCase().includes('rodo')) icone = 'ph-broom';
+
+        const valorFloat = parseFloat(p.preco_venda);
+        const valorFormatado = isNaN(valorFloat) ? 'Sob Consulta' : `R$ ${valorFloat.toFixed(2)}`;
+
+        let midiaVisual = '';
+        if (p.imagem) {
+            midiaVisual = `<img src="${p.imagem}" alt="${p.nome}" style="width:100%; height:${eDestaque ? '200px' : '150px'}; object-fit:cover; border-radius:8px; margin-bottom:15px;">`;
+        } else {
+            midiaVisual = `<i class="ph-duotone ${icone} product-icon" style="font-size: ${eDestaque ? '80px' : '48px'}; margin: 20px 0;"></i>`;
+        }
+
+        const tagTop = eDestaque ? `<span style="background:#dc3545; color:white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-bottom:10px; display:inline-block;"><i class="ph-fill ph-fire"></i> MAIS VENDIDO</span>` : '<p class="product-category">Linha Profissional</p>';
+
+        grid.innerHTML += `
+            <div class="product-card" ${eDestaque ? 'style="border-color: #ff7f50;"' : ''}>
+                ${midiaVisual}
+                ${tagTop}
+                <h3 class="product-title">${p.nome}</h3>
+                <p class="product-price">${valorFormatado} <span style="font-size:12px; color:#888;">/${p.unidade_medida || 'un'}</span></p>
+                <button onclick="pedirNoWhatsApp('${p.nome}')" class="btn-primary-large btn-whatsapp">
+                    <i class="ph-fill ph-whatsapp-logo" style="font-size: 20px;"></i>
+                    Cotar Agora
+                </button>
+            </div>
+        `;
+    });
+}
+
+function filtrarCatalogoLive() {
+    const termo = document.getElementById('live-search-input').value.toLowerCase().trim();
+    
+    if (!termo) {
+        renderizarProdutos(produtosGlobal);
+        return;
+    }
+
+    const filtrados = produtosGlobal.filter(p => p.nome.toLowerCase().includes(termo));
+    renderizarProdutos(filtrados);
+    
+    // Pequeno scroll elegante se a pessoa começar a digitar estando no cabeçalho
+    const catalogoHeader = document.getElementById('catalogo');
+    const bottomDaCaixa = document.getElementById('live-search-input').getBoundingClientRect().bottom;
+    
+    if (bottomDaCaixa > window.innerHeight) {
+        catalogoHeader.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+async function carregarDestaques() {
+    const grid = document.getElementById('destaques-vitrine');
+    try {
+        const response = await fetch(`${API_URL}/site/destaques`);
+        const data = await response.json();
+
+        if (data.success && data.destaques.length > 0) {
+            renderizarProdutos(data.destaques, 'destaques-vitrine', true);
+        } else {
+            grid.innerHTML = '<p style="text-align: center;">Destaques em processamento...</p>';
+        }
+    } catch(err) {
+        grid.innerHTML = '<p style="color:red;">Erro ao buscar produtos mais vendidos.</p>';
+    }
+}
+
+async function carregarEstatisticas() {
+    try {
+        const response = await fetch(`${API_URL}/site/estatisticas`);
+        const data = await response.json();
+
+        if (data.success) {
+            animarNumeros('contador-clientes', data.clientes, '+');
+            animarNumeros('contador-produtos', data.produtos, '+');
+        }
+    } catch(err) {
+        console.error("Falha ao puxar KPIs", err);
+    }
+}
+
+function animarNumeros(idElemento, alvoTotal, prefixo = '') {
+    const el = document.getElementById(idElemento);
+    if (!el) return;
+    
+    let atual = 0;
+    const duracao = 2000; // 2 segundos
+    const passos = 60; // 60 frames
+    const incremento = alvoTotal / passos;
+    const tempoFrame = duracao / passos;
+
+    const timer = setInterval(() => {
+        atual += incremento;
+        if (atual >= alvoTotal) {
+            atual = alvoTotal;
+            clearInterval(timer);
+        }
+        el.innerText = prefixo + Math.floor(atual);
+    }, tempoFrame);
 }
 
 function pedirNoWhatsApp(produtoNome) {
@@ -119,10 +207,27 @@ function abrirModalB2B() {
         document.getElementById('b2b-dashboard-area').style.display = 'none';
         document.getElementById('b2b-cnpj').value = '';
     }
+
+    // Fechar ao clicar fora do modal
+    document.getElementById('modal-b2b').onclick = function (event) {
+        if (event.target === document.getElementById('modal-b2b')) {
+            fecharModalB2B();
+        }
+    };
+
+    // Fechar ao pressionar a tecla Esc
+    document.addEventListener('keydown', fecharComEscB2B);
+}
+
+function fecharComEscB2B(event) {
+    if (event.key === 'Escape' || event.keyCode === 27) {
+        fecharModalB2B();
+    }
 }
 
 function fecharModalB2B() {
     document.getElementById('modal-b2b').style.display = 'none';
+    document.removeEventListener('keydown', fecharComEscB2B);
 }
 
 async function fazerLoginB2B() {
