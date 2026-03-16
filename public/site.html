@@ -28,9 +28,12 @@
                 <li><a href="#catalogo">Catálogo</a></li>
                 <li><a href="#contato">Seja Cliente</a></li>
             </ul>
-            <div class="nav-actions">
+            <div class="nav-actions" style="display: flex; gap: 15px; align-items: center;">
                 <button onclick="abrirModalB2B()" class="btn-outline-primary">
-                    <i class="ph ph-user"></i> Portal B2B
+                    <i class="ph ph-user"></i> <span class="hide-mobile">Portal B2B</span>
+                </button>
+                <button class="mobile-menu-btn" onclick="toggleMenuMobile()" aria-label="Abrir Menu">
+                    <i class="ph ph-list"></i>
                 </button>
             </div>
         </div>

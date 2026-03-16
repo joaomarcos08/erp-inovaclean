@@ -10,11 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            // Num cenário real teríamos a filtragem aqui
-            // Como é um MVP, o clique é apenas visual/UX
+        });
+    });
+
+    // Fechar menu mobile ao clicar num link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.querySelector('.nav-links').classList.remove('active');
         });
     });
 });
+
+function toggleMenuMobile() {
+    document.querySelector('.nav-links').classList.toggle('active');
+}
 
 let produtosGlobal = [];
 
