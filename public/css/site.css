@@ -230,6 +230,48 @@ button, .btn-primary-large, .btn-secondary-large, .btn-outline-primary {
   gap: 15px;
 }
 
+/* HERO SEARCH BAR */
+.hero-search-container {
+  margin-top: 40px;
+  position: relative;
+  width: 100%;
+  max-width: 550px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #333;
+  font-size: 24px;
+}
+
+.hero-search-input {
+  width: 100%;
+  padding: 18px 20px 18px 60px;
+  font-size: 16px;
+  border-radius: 40px;
+  border: 2px solid transparent;
+  background: #ffffff;
+  color: #333;
+  outline: none;
+  box-sizing: border-box;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.hero-search-input::placeholder {
+  color: #888;
+  font-weight: 400;
+}
+
+.hero-search-input:focus {
+  border-color: #ffc107;
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+}
+
 .hero-image {
   flex: 1;
   display: flex;
