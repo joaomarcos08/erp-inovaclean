@@ -275,6 +275,38 @@
         </div>
     </div>
 
+    <!-- BOTÃO FLUTUANTE DO CARRINHO (WHATSAPP FUNIL) -->
+    <div id="btn-flutuante-carrinho" class="floating-cart-btn" onclick="abrirCarrinho()" style="display: none;">
+        <i class="ph-fill ph-shopping-cart"></i>
+        <span id="cart-badge" class="cart-badge">0</span>
+    </div>
+
+    <!-- SIDEBAR DO CARRINHO (ORÇAMENTO) -->
+    <div id="cart-overlay" class="cart-overlay" onclick="fecharCarrinho()"></div>
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="ph-fill ph-list-numbers"></i> Seu Orçamento</h3>
+            <button class="fechar-cart-btn" onclick="fecharCarrinho()">&times;</button>
+        </div>
+        <div class="cart-body" id="cart-items-container">
+            <!-- Itens injetados via JS -->
+            <div class="empty-cart-msg">
+                Seu carrinho está vazio.<br>Adicione itens do catálogo.
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total Estimado:</span>
+                <strong id="cart-total-valor">R$ 0,00</strong>
+            </div>
+            <p style="font-size: 11px; opacity:0.7; margin-bottom: 10px; text-align: center;">Tabela consultiva sujeita a negociação.</p>
+            <button class="btn-primary-large btn-whatsapp" onclick="enviarOrcamentoWhatsApp()" style="width: 100%; justify-content: center; font-size: 16px;">
+                <i class="ph-fill ph-whatsapp-logo" style="font-size: 22px;"></i>
+                Enviar Pedido
+            </button>
+        </div>
+    </div>
+
     <script src="/js/site.js"></script>
 </body>
 

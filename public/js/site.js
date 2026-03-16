@@ -27,6 +27,153 @@ function toggleMenuMobile() {
 
 let produtosGlobal = [];
 
+// ================= CARRINHO / FUNIL WHATSAPP =================
+window.carrinhoSite = [];
+const WHATSAPP_NUMERO = '5599981234567'; // ← SUBSTITUIR PELO NÚMERO REAL
+
+window.adicionarAoOrcamento = function(produtoId) {
+    const produto = produtosGlobal.find(p => p.id === produtoId);
+    if (!produto) return;
+
+    const itemExistente = window.carrinhoSite.find(i => i.id === produtoId);
+    if (itemExistente) {
+        itemExistente.quantidade += 1;
+    } else {
+        window.carrinhoSite.push({
+            id: produto.id,
+            nome: produto.nome,
+            preco: parseFloat(produto.preco_venda) || 0,
+            unidade: produto.unidade_medida || 'un',
+            imagem: produto.imagem || null,
+            quantidade: 1
+        });
+    }
+
+    atualizarBadge();
+    renderizarItensCarrinho();
+    abrirCarrinho();
+
+    // Feedback visual no botão do card
+    const btns = document.querySelectorAll(`[data-produto-id="${produtoId}"]`);
+    btns.forEach(btn => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Adicionado!';
+        btn.style.background = '#198754';
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+        }, 1400);
+    });
+};
+
+function atualizarBadge() {
+    const total = window.carrinhoSite.reduce((acc, i) => acc + i.quantidade, 0);
+    const badge = document.getElementById('cart-badge');
+    const btn = document.getElementById('btn-flutuante-carrinho');
+    if (!badge || !btn) return;
+
+    badge.textContent = total;
+    btn.style.display = total > 0 ? 'flex' : 'none';
+}
+
+function calcularTotal() {
+    return window.carrinhoSite.reduce((acc, i) => acc + (i.preco * i.quantidade), 0);
+}
+
+function renderizarItensCarrinho() {
+    const container = document.getElementById('cart-items-container');
+    const totalEl = document.getElementById('cart-total-valor');
+    if (!container) return;
+
+    if (window.carrinhoSite.length === 0) {
+        container.innerHTML = `<div class="empty-cart-msg">
+            <i class="ph-duotone ph-shopping-cart" style="font-size:48px; color:#ddd; margin-bottom:15px;"></i>
+            <br>Seu carrinho está vazio.<br>Adicione itens do catálogo.
+        </div>`;
+        if (totalEl) totalEl.textContent = 'R$ 0,00';
+        return;
+    }
+
+    let html = '';
+    window.carrinhoSite.forEach(item => {
+        const icone = item.nome.toLowerCase().includes('sab') || item.nome.toLowerCase().includes('detergente')
+            ? 'ph-drop' : item.nome.toLowerCase().includes('papel')
+            ? 'ph-toilet-paper' : item.nome.toLowerCase().includes('lixo')
+            ? 'ph-trash' : 'ph-package';
+
+        const midiaHTML = item.imagem
+            ? `<img src="${item.imagem}" alt="${item.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;margin-right:14px;border:1px solid #efefef;">`
+            : `<div class="cart-item-icon"><i class="ph-duotone ${icone}"></i></div>`;
+
+        const subtotal = (item.preco * item.quantidade).toFixed(2);
+
+        html += `
+            <div class="cart-item" id="cart-item-${item.id}">
+                ${midiaHTML}
+                <div class="cart-item-info">
+                    <div class="cart-item-title">${item.nome}</div>
+                    <div class="cart-item-price">R$ ${item.preco.toFixed(2)} / ${item.unidade} &nbsp;·&nbsp; <span style="color:#555;">Subtotal: R$ ${subtotal}</span></div>
+                    <div class="cart-item-controls">
+                        <button class="cart-btn-qty" onclick="alterarQuantidade(${item.id}, -1)">−</button>
+                        <span class="cart-item-qty">${item.quantidade}</span>
+                        <button class="cart-btn-qty" onclick="alterarQuantidade(${item.id}, +1)">+</button>
+                    </div>
+                </div>
+                <button class="cart-item-remove" title="Remover" onclick="removerDoCarrinho(${item.id})">
+                    <i class="ph-fill ph-trash"></i>
+                </button>
+            </div>`;
+    });
+
+    container.innerHTML = html;
+    if (totalEl) totalEl.textContent = `R$ ${calcularTotal().toFixed(2)}`;
+}
+
+window.alterarQuantidade = function(produtoId, delta) {
+    const item = window.carrinhoSite.find(i => i.id === produtoId);
+    if (!item) return;
+    item.quantidade += delta;
+    if (item.quantidade <= 0) {
+        window.carrinhoSite = window.carrinhoSite.filter(i => i.id !== produtoId);
+    }
+    atualizarBadge();
+    renderizarItensCarrinho();
+};
+
+window.removerDoCarrinho = function(produtoId) {
+    window.carrinhoSite = window.carrinhoSite.filter(i => i.id !== produtoId);
+    atualizarBadge();
+    renderizarItensCarrinho();
+};
+
+window.abrirCarrinho = function() {
+    document.getElementById('cart-sidebar').classList.add('open');
+    document.getElementById('cart-overlay').classList.add('open');
+    renderizarItensCarrinho();
+};
+
+window.fecharCarrinho = function() {
+    document.getElementById('cart-sidebar').classList.remove('open');
+    document.getElementById('cart-overlay').classList.remove('open');
+};
+
+window.enviarOrcamentoWhatsApp = function() {
+    if (window.carrinhoSite.length === 0) {
+        alert('Adicione ao menos um produto ao orçamento antes de enviar.');
+        return;
+    }
+
+    const linhas = window.carrinhoSite.map(i =>
+        `  • ${i.quantidade}x ${i.nome} (R$ ${i.preco.toFixed(2)} / ${i.unidade})`
+    ).join('\n');
+
+    const total = calcularTotal().toFixed(2);
+    const mensagem = `Olá InovaClean! 👋\n\nGostaria de solicitar um *orçamento* para os seguintes itens:\n\n${linhas}\n\n*Total Estimado: R$ ${total}*\n_Cliente de Bacabal/MA._\n\nAguardo retorno!`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, '_blank');
+};
+
 async function carregarCatalogo() {
     const grid = document.getElementById('produtos-vitrine');
 
@@ -85,9 +232,9 @@ function renderizarProdutos(arrayDeProdutos, containerId = 'produtos-vitrine', e
                 ${tagTop}
                 <h3 class="product-title">${p.nome}</h3>
                 <p class="product-price">${valorFormatado} <span style="font-size:12px; color:#888;">/${p.unidade_medida || 'un'}</span></p>
-                <button onclick="pedirNoWhatsApp('${p.nome}')" class="btn-primary-large btn-whatsapp">
-                    <i class="ph-fill ph-whatsapp-logo" style="font-size: 20px;"></i>
-                    Cotar Agora
+                <button onclick="adicionarAoOrcamento(${p.id})" data-produto-id="${p.id}" class="btn-primary-large btn-whatsapp">
+                    <i class="ph-fill ph-shopping-cart" style="font-size: 18px;"></i>
+                    Pedir Orçamento
                 </button>
             </div>
         `;
